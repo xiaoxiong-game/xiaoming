@@ -28,6 +28,7 @@ body.tieba { background: #f2f3f5; color: #222; }
 .thread-row .t a.title:hover { text-decoration: underline; }
 .thread-row .t .ex { color: #888; font-size: 13px; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .thread-row .by { width: 130px; flex: none; font-size: 12px; color: #999; text-align: right; }
+.thread-row .by span { display: block; }
 .tag { display: inline-block; font-size: 11px; padding: 0 5px; border-radius: 3px; margin-right: 6px; color: #fff; background: #9aa5b5; vertical-align: 1px; }
 .tag.top { background: #f56c6c; }
 .tag.good { background: #e6a23c; }
@@ -59,10 +60,15 @@ body.tieba { background: #f2f3f5; color: #222; }
 .archive-form button { background: #3385ff; color: #fff; border: 0; border-radius: 4px; padding: 0 16px; cursor: pointer; }
 .tb-foot { text-align: center; color: #aaa; font-size: 12px; padding: 20px 0 40px; }
 @media (max-width: 760px) {
-  .tb-side { display: none; }
+  .tb-top .in { flex-wrap: wrap; gap: 8px 14px; }
+  .tb-search { flex: 1 1 100%; max-width: none; min-width: 0; }
+  .tb-search input { min-width: 0; }
+  .tb-wrap { flex-direction: column; align-items: stretch; }
+  .tb-side { width: auto; }
   .floor { flex-direction: column; }
   .floor .who { width: auto; display: flex; gap: 10px; align-items: center; text-align: left; padding: 10px 14px; }
   .floor .who img { width: 40px; height: 40px; margin: 0; }
-  .thread-row .by { display: none; }
-  .tb-search select { display: none; }
+  .thread-row { flex-wrap: wrap; row-gap: 2px; }
+  .thread-row .by { width: auto; flex-basis: 100%; padding-left: 58px; text-align: left; }
+  .thread-row .by span { display: inline; margin-right: 8px; }
 }

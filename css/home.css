@@ -1,0 +1,42 @@
+/* 游戏主页：夜里的河，河上停着一盏纸灯 */
+html { background: #0a0d0f; }
+body.home-body { min-height: 100vh; background: radial-gradient(ellipse at 50% -10%, #1a2427 0%, #0a0d0f 62%) fixed; color: #c9d1d3; }
+.home, .home-river, .home-foot { animation: home-in 1.4s ease .1s both; }
+.home { position: relative; z-index: 1; max-width: 600px; margin: 0 auto; padding: 88px 26px 0; }
+.home h1 { margin: 0; text-align: center; font: 400 56px/1.2 "Kaiti SC", "STKaiti", "KaiTi", serif; letter-spacing: 18px; text-indent: 18px; color: #eef3f3; text-shadow: 0 0 28px rgba(255, 196, 120, .16); }
+.home .sub { margin: 14px 0 0; text-align: center; color: #7f969a; font-size: 14px; letter-spacing: 6px; text-indent: 6px; }
+.home .saying { margin: 52px 0 38px; text-align: center; font: 19px/1.9 "Kaiti SC", "STKaiti", "KaiTi", serif; color: #b6cdd0; letter-spacing: 2px; }
+.home .story p { margin: 0 0 18px; font: 17px/2.1 "Songti SC", "STSong", "SimSun", "Noto Serif CJK SC", serif; text-indent: 2em; text-align: justify; }
+.home .start { display: block; width: fit-content; margin: 44px auto 0; padding: 12px 46px; border: 1px solid rgba(255, 206, 130, .55); border-radius: 4px; background: rgba(255, 190, 110, .07); color: #fbe6c2; font: 20px/1.4 "Kaiti SC", "STKaiti", "KaiTi", serif; letter-spacing: 10px; text-indent: 10px; text-decoration: none; transition: background .3s, box-shadow .3s; }
+.home .start:hover, .home .start:focus-visible { background: rgba(255, 190, 110, .14); box-shadow: 0 0 28px rgba(255, 190, 110, .22); outline: none; }
+.home .facts { display: flex; flex-wrap: wrap; justify-content: center; margin: 22px 0 0; padding: 0; list-style: none; color: #8d9a9d; font-size: 13px; }
+.home .facts li + li::before { content: '·'; margin: 0 .7em; color: #55656a; }
+/* 河夹在正文和页脚之间，不跟着屏幕走 */
+.home-river { position: relative; height: 240px; margin-top: 6px; pointer-events: none; }
+.home-river .waves { position: absolute; }
+.home-river .lamp { position: absolute; right: auto; left: calc(50% - 100px); }
+.home-foot { position: relative; z-index: 1; background: rgba(3, 10, 13, .6); color: #7d898d; font-size: 13px; line-height: 1.9; }
+.home-foot .in { max-width: 600px; margin: 0 auto; padding: 26px 26px 56px; }
+.home-foot p { margin: 0 0 8px; }
+.home-foot a { color: #a9c1c4; }
+.home-foot .credit { display: flex; align-items: center; gap: 18px; margin-top: 18px; padding-top: 20px; border-top: 1px solid #1a2529; color: #6f7c80; font-size: 12px; }
+.home-foot .who { flex: 1; min-width: 0; }
+.home-foot .by { color: #b4c0c2; font-size: 14px; }
+.home-foot .qr { flex: none; margin: 0; text-align: center; }
+.home-foot .qr img { display: block; width: 96px; height: 96px; padding: 6px; background: #fff; border-radius: 6px; box-sizing: content-box; }
+.home-foot .qr figcaption { margin-top: 4px; font-size: 12px; color: #7d898d; }
+@keyframes home-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@media (max-width: 760px) {
+  .home-river { height: 150px; }
+  .home-river .lamp { left: calc(50% - 50px); }
+}
+@media (max-width: 600px) {
+  .home { padding: 60px 20px 0; }
+  .home h1 { font-size: 42px; letter-spacing: 12px; text-indent: 12px; }
+  .home .saying { font-size: 17px; margin: 38px 0 28px; }
+  .home .story p { font-size: 16px; line-height: 2; }
+  .home .facts { display: grid; grid-template-columns: auto auto; justify-content: center; gap: 2px 20px; }
+  .home .facts li + li::before { content: none; }
+  .home-foot .in { padding: 22px 20px 44px; }
+}
+@media (prefers-reduced-motion: reduce) { .home, .home-river, .home-foot { animation: none; } }

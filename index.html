@@ -3,19 +3,40 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>程溪的手机</title>
+<title>河灯秘事</title>
+<meta name="description" content="一部民俗悬疑网页解谜。白鹭渡的老人说，七月里，莫在河边喊人的大名。">
+<meta name="theme-color" content="#0a0d0f">
 <link rel="stylesheet" href="css/common.css">
-<link rel="stylesheet" href="css/phone.css">
+<link rel="stylesheet" href="css/river.css">
+<link rel="stylesheet" href="css/home.css">
 </head>
-<body class="phone-body">
-<div class="device">
-  <div class="status" id="status"></div>
-  <div class="screen" id="app"></div>
-</div>
-<p class="side-note">《小名》· 虚构作品。<br>这是程溪的手机。点聊天里的链接会在浏览器新标签打开网页，<b>网址可以自己改</b>。<br>卡住了可以看<a href="walkthrough.html" target="_blank" rel="noopener">攻略</a>，答案默认折叠。</p>
-<script src="js/lunar-data.js"></script>
-<script src="js/core.js"></script>
-<script src="js/phone-data.js"></script>
-<script src="js/phone.js"></script>
+<body class="home-body">
+<main class="home">
+  <h1>河灯秘事</h1>
+  <p class="sub">一部民俗悬疑网页解谜</p>
+  <p class="saying">白鹭渡的老人说，<br>七月里，莫在河边喊人的大名。</p>
+  <div class="story">
+    <p>你叫程溪，人在外地，手里只有一部手机。</p>
+    <p>二舅家的表妹许禾今年二十岁，暑假回白鹭渡的奶奶家，帮着把族谱录进电脑。八月二十五日夜里九点多，她出门以后再没回来。手机在渡口的台阶上找到。搜救队说，十一点多，河中间有人应了一声。</p>
+  </div>
+  <a class="start" href="phone.html">开始游戏</a>
+  <ul class="facts"><li>手机、电脑都能玩</li><li>没有声音</li><li>四种结局</li><li>进度自动保存在本机浏览器</li></ul>
+</main>
+<div class="home-river" id="river"></div>
+<footer class="home-foot"><div class="in">
+  <div class="notes">
+    <p>部分线索需要在游戏外搜索。游戏里的外部账号由作者创建，请勿打扰同名用户。</p>
+    <p>不建议按 F12 翻源码，答案和结局都写在里面，翻到就没意思了。</p>
+  </div>
+  <div class="credit">
+    <div class="who">
+      <p class="by">故事纯属虚构 · 作者：小熊饼干</p>
+      <p>游戏里的地名、人物、机构和事件都是编的，与现实中同名的地点和人物无关。民俗说法有的来自民间，有的是为故事编的，请勿当真。</p>
+    </div>
+    <figure class="qr"><img src="assets/img/author-xhs-qr.png" width="206" height="206" alt="小熊饼干的小红书二维码"><figcaption>小红书</figcaption></figure>
+  </div>
+</div></footer>
+<script src="js/river.js"></script>
+<script>document.getElementById('river').innerHTML = XMRiver.waves() + XMRiver.lamp();</script>
 </body>
 </html>

@@ -93,23 +93,23 @@
     kong: { title: '落空', tag: '坏结局', body: KONG, note: '撤灯条上写错了人。写名字的是看灯人，契只认他。' }
   };
   const e = ENDINGS[kind];
-  if (!e) { location.replace('index.html'); return; }
+  if (!e) { location.replace('phone.html'); return; }
 
   // Every retry goes back to 外婆's call; the investigation stays, the night starts over.
-  const replay = '<button type="button" class="main" data-go="index.html#/call">回到和外婆的视频，再选一次</button>';
-  const phone = '<a href="index.html#/chats">看看手机</a>';
+  const replay = '<button type="button" class="main" data-go="phone.html#/call">回到和外婆的视频，再选一次</button>';
+  const phone = '<a href="phone.html#/chats">看看手机</a>';
   const again = '<button type="button" id="again">清除进度，从头再来</button>';
   let links = replay + phone + again;
   if (kind === 'te') {
-    links = '<a class="main" href="index.html#/chat/xuhe">回到第一页，再看一次那条语音</a>' + replay.replace(' class="main"', '') +
-      '<a href="miao.html#/fangdeng/ihsgnog">去水底下看看</a>' + phone + again;
+    links = '<a class="main" href="phone.html#/chat/xuhe">回到第一页，再看一次那条语音</a>' + replay.replace(' class="main"', '') +
+      '<a href="miao.html#/fangdeng/ihsgnog" target="_blank" rel="noopener">去水底下看看</a>' + again;
   } else if (kind === 'ne' && !locked) {
-    links = '<button type="button" class="main" data-go="index.html#/' + (flags.chenAdded ? 'chat/chenbo' : 'add') + '">去找陈伯</button>' + replay.replace(' class="main"', '') + phone + again;
+    links = '<button type="button" class="main" data-go="phone.html#/' + (flags.chenAdded ? 'chat/chenbo' : 'add') + '">去找陈伯</button>' + replay.replace(' class="main"', '') + phone + again;
   }
 
-  document.title = '小名 · ' + e.title;
+  document.title = '河灯秘事 · ' + e.title;
   box.innerHTML = XM.previewBanner('结局 ' + (forced || kind)) +
-    '<div class="tag">《小名》　' + esc(e.tag) + '</div><h1>' + esc(e.title) + '</h1>' +
+    '<div class="tag">《河灯秘事》　' + esc(e.tag) + '</div><h1>' + esc(e.title) + '</h1>' +
     e.body.map(p => '<p>' + esc(p) + '</p>').join('') +
     (e.note ? '<p class="note">（' + esc(e.note) + '）</p>' : '') +
     '<div class="links">' + links + '</div>';

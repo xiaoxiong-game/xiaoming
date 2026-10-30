@@ -8,6 +8,8 @@
 
   // ---------- state helpers ----------
   function ending() { return XM.state.ending; }
+  // 外婆's call only opens once the contract has been read and 陈伯 has added you.
+  function callUnlocked() { return (XM.flag('contractRead') && XM.flag('chenAdded')) || XM.preview; }
   // `when` terms are joined by &. A term is ending:a|b, !flag, or flag|flag. Preview tabs pass every flag term.
   function visible(m) {
     if (!m.when) return true;
@@ -81,16 +83,19 @@
   // ---------- home ----------
   function home() {
     const n = totalUnread();
-    const callReady = (XM.flag('contractRead') || XM.preview) && !ending();
+    const callReady = callUnlocked() && !ending();
     const missed = XM.flag('callRinging') && !XM.flag('callStarted');
+    const unreadNotice = n ? '<a class="notice" href="#/chats"><img src="assets/img/av-family.jpg" alt=""><div><b>微聊</b><span>' + n + ' 条新消息</span></div></a>' : '';
+    // After any ending but the true one, 外婆's notice leads back into that call.
+    const againNotice = ending() && ending() !== 'te' ? '<a class="notice" href="#/recall"><img src="assets/img/av-waipo.jpg" alt=""><div><b>外婆</b><span>视频已挂断。点这里回到那通视频，再选一次</span></div></a>' : '';
     const notice = callReady
       ? '<a class="notice" href="#/call"><img src="assets/img/av-waipo.jpg" alt=""><div><b>外婆</b><span>' + (missed ? '视频通话邀请，未接。点这里回拨' : '十一点视频，莫睡。点这里接') + '</span></div></a>'
-      : (n ? '<a class="notice" href="#/chats"><img src="assets/img/av-family.jpg" alt=""><div><b>微聊</b><span>' + n + ' 条新消息</span></div></a>' : '');
+      : unreadNotice + againNotice;
     view('<div class="screen home"><div class="wall-date">8月26日 星期三　七月十四</div><div class="wall-time">' + XM.clock() + '</div>' + notice +
       '<div class="apps">' +
       '<a class="app" href="#/chats"><div class="ico" style="background:#07c160">💬</div>微聊' + (n ? '<span class="badge">' + n + '</span>' : '') + '</a>' +
       '<a class="app" href="#/album"><div class="ico" style="background:linear-gradient(135deg,#ffcf5c,#ff7a59)">🖼️</div>相册</a>' +
-      '<a class="app" href="' + (callReady ? '#/call' : '#/nocall') + '"><div class="ico" style="background:#34c759">📞</div>电话</a>' +
+      '<a class="app" href="' + (ending() ? '#/recall' : callReady ? '#/call' : '#/nocall') + '"><div class="ico" style="background:#34c759">📞</div>电话</a>' +
       '<a class="app" href="#/reset"><div class="ico" style="background:#8e8e93">↺</div>重新开始</a>' +
       '</div><div class="dock">' +
       '<a class="app" href="#/chats"><div class="ico" style="background:#07c160">💬</div></a>' +
@@ -297,7 +302,7 @@
     const path = pts.map((v, i) => (i ? 'L' : 'M') + (1 + i * step) + ' ' + (17 - (v - 1) * 4)).join(' ');
     return '<svg viewBox="0 0 30 18" aria-label="第' + t + '调"><line x1="29" y1="1" x2="29" y2="17" stroke="#888" stroke-width="1"/><path d="' + path + '" stroke="#e8e8e8" stroke-width="2" fill="none"/></svg>';
   }
-  const call = { step: 'hello', log: [], wrongName: 0, round: 0, tag: null, writer: null, pad: { i: null, f: null, t: null, seq: [] } };
+  const call = { step: 'hello', log: [], wrongName: 0, round: 0, tag: null, writer: null, padMode: 'say', pad: { i: null, f: null, t: null, seq: [] } };
   function say(cls, text) { call.log.push([cls, text]); }
   function finish(kind, cause) {
     if (cause) XM.set('beCause', cause);
@@ -305,11 +310,11 @@
     setTimeout(() => { location.href = 'ending.html'; }, 1600);
   }
   function callPage() {
-    if (!(XM.flag('contractRead') || XM.preview)) {
+    if (!callUnlocked()) {
       view(bar('电话', '#/') + '<div class="scroll"><div class="form-page"><div class="note">没有来电。</div></div></div>');
       return;
     }
-    if (ending()) { location.replace('ending.html'); return; }
+    if (ending()) { location.replace('#/recall'); return; }
     XM.set('callStarted');
     if (!call.log.length) {
       // A fresh call is a fresh night: a slip burned in a call that was cut off no longer counts.
@@ -321,6 +326,19 @@
       say('gp', '外婆：溪伢子，你在冇？');
     }
     renderCall();
+  }
+  // The night is over, but the phone can take you back into that call: same as the ending page's replay button.
+  function recallPage() {
+    if (!ending()) { location.replace('#/' + (callUnlocked() ? 'call' : 'nocall')); return; }
+    view(bar('电话', '#/') + '<div class="scroll"><div class="list"><div class="row"><img class="av" src="assets/img/av-waipo.jpg" alt=""><div class="mid"><div class="name">外婆</div><div class="last">视频通话 · 23:00</div></div></div></div>' +
+      '<div class="form-page"><div class="note">视频已经挂断。回到那通视频可以重新选，查到的东西都还在。</div>' +
+      '<button type="button" id="replay">回到和外婆的视频，再选一次</button><button type="button" id="seeEnding" style="background:#8e8e93">再看一遍结局</button></div></div>');
+    document.getElementById('replay').addEventListener('click', () => {
+      Object.assign(call, { step: 'hello', log: [], wrongName: 0, round: 0, tag: null, writer: null, padMode: 'say', pad: { i: null, f: null, t: null, seq: [] } });
+      XM.clearEnding();
+      location.replace('#/call');
+    });
+    document.getElementById('seeEnding').addEventListener('click', () => { location.href = 'ending.html'; });
   }
   function renderCall() {
     const log = call.log.map(([c, t]) => '<p class="' + c + '">' + esc(t) + '</p>').join('');
@@ -343,7 +361,7 @@
       case 'writer': return slipHtml() + opt('写名字', 'writer-name') + opt('我不晓得', 'writer-none');
       case 'writerName': return slipHtml() + '<div class="row2"><input id="writerName" autocomplete="off" placeholder="看灯人" aria-label="看灯人"><button type="button" class="primary" data-act="writer">讲给小姨</button></div>';
       case 'stair': return '<div class="row2"><input id="stairNo" inputmode="numeric" placeholder="第几级" aria-label="第几级台阶"><button type="button" class="primary" data-act="stair">告诉外婆</button></div>';
-      case 'name': return '<button type="button" class="primary" data-act="openpad">开口念</button>';
+      case 'name': return opt('开口念', 'openpad') + opt('打字发过去', 'typepad');
       case 'pad': return padHtml();
       case 'card': return '<div class="cards3">' + cardBtn('wheat', '地里长的') + cardBtn('ink', '写字用的') + cardBtn('pulse', '号脉用的') + '</div>';
       case 'proto': return opt('外婆喊完，我跟一声', 'proto-ok') + opt('我们一起喊', 'proto-bad') + opt('我先喊，外婆跟', 'proto-bad');
@@ -366,8 +384,8 @@
     const current = (p.i ? (p.i === '∅' ? '' : p.i) : '?') + (p.f || '?') + (p.t || '?');
     return '<div class="pad"><div class="lbl">声母</div><div class="keys">' + keys(INITIALS, 'i') + '</div><div class="lbl">韵母</div><div class="keys">' + keys(FINALS, 'f') + '</div><div class="lbl">声调（调形）</div><div class="keys">' + keys(['1', '2', '3', '5', '6'], 't') + '</div>' +
       '<div class="seq">当前：<span>' + esc(current) + '</span>　已拼：' + (p.seq.length ? p.seq.map(s => '<span>' + esc(s) + '</span>').join('') : '<em style="color:#777">还没有</em>') + '</div>' +
-      '<div class="row2"><button type="button" data-act="pad-add">加上这个音</button><button type="button" data-act="pad-clear">清空</button></div>' +
-      '<button type="button" class="primary" data-act="pad-send">念给外婆听</button></div>';
+      '<div class="row2"><button type="button" data-act="pad-add">加上这个音</button><button type="button" data-act="pad-clear">清空</button><button type="button" data-act="pad-back">返回</button></div>' +
+      '<button type="button" class="primary" data-act="pad-send">' + (call.padMode === 'type' ? '打字发出去' : '念给外婆听') + '</button></div>';
   }
   // ---------- the withdrawal slip ----------
   const TAG_LIT = '20260713070305';
@@ -464,7 +482,7 @@
         call.step = 'name';
       } else say('gp', '外婆：那级我看过了，没有');
     } else if (s === 'name') {
-      if (a === 'openpad') call.step = 'pad';
+      if (a === 'openpad' || a === 'typepad') { call.padMode = a === 'typepad' ? 'type' : 'say'; call.step = 'pad'; }
     } else if (s === 'pad') {
       const p = call.pad;
       if (a === 'pad-add') {
@@ -473,11 +491,31 @@
         if (!SYLLABLES.includes(syl)) { XM.toast('白鹭渡话里没有这个音'); return; }
         p.seq.push(syl); p.i = p.f = p.t = null;
       } else if (a === 'pad-clear') { p.seq = []; }
+      else if (a === 'pad-back') { p.seq = []; p.i = p.f = p.t = null; call.step = 'name'; }
       else if (a === 'pad-send') {
         if (!p.seq.length) return;
-        say('me', '（说）' + p.seq.join(' '));
         const core = p.seq.filter(x => !['zuan3', 'lai2', 'o6'].includes(x)).join(' ');
-        if (core === 'a1 mo5' || core === 'mo5') {
+        const isName = core === 'a1 mo5' || core === 'mo5';
+        if (call.padMode === 'type') {
+          // Typing the small name is writing it down, just like the slip or the chat box.
+          say('me', '（打字）' + p.seq.join(' '));
+          if (isName) {
+            XM.set('nameWritten');
+            say('yi', '小姨：溪，你怎么打成字了……');
+            say('gp', '外婆：你写下来了？');
+            say('ev', '外婆没有再出声。');
+            call.step = 'over';
+            finish('be', 'typed');
+          } else {
+            say('yi', '小姨：外婆不认得字。要讲，就讲出来。');
+            p.seq = [];
+            call.step = 'name';
+          }
+          renderCall();
+          return;
+        }
+        say('me', '（说）' + p.seq.join(' '));
+        if (isName) {
           if (XM.flag('nameWritten')) {
             say('gp', '外婆：这个名……你写下来过');
             say('ev', '外婆没有再出声。河上有人笑了一下');
@@ -596,6 +634,7 @@
     [/^\/me$/, me],
     [/^\/reset$/, resetPage],
     [/^\/call$/, callPage],
+    [/^\/recall$/, recallPage],
     [/^\/nocall$/, () => { view(bar('电话', '#/') + '<div class="scroll"><div class="form-page"><div class="note">最近没有来电。</div></div></div>'); }],
     // Endings have their own page; old links into the phone are sent there.
     [/^\/ending\/([\w-]+)$/, kind => { location.replace('ending.html' + (XM.preview ? '#' + kind : '')); }]

@@ -35,7 +35,7 @@
   function row(p, kw) {
     const tag = p.top ? '<span class="tag top">置顶</span>' : p.good ? '<span class="tag good">精</span>' : '<span class="tag">' + esc(p.tag) + '</span>';
     return '<div class="thread-row"><div class="num">' + p.replies.length + '</div><div class="t">' + tag + '<a class="title" href="#/p/' + p.id + '">' + highlight(p.title, kw) + '</a><div class="ex">' + highlight(textOf(p).slice(0, 60), kw) + '</div></div>' +
-      '<div class="by">' + esc(user(p.by).name) + '<br>' + shortTime(lastReply(p)) + '</div></div>';
+      '<div class="by"><span>' + esc(user(p.by).name) + '</span><span>' + shortTime(lastReply(p)) + '</span></div></div>';
   }
 
   function home() {
