@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>白鹭渡许氏宗谱</title>
+<link rel="stylesheet" href="css/common.css">
+<style>
+body { background: #efe8d8; color: #2a241c; font-family: "Songti SC", SimSun, serif; }
+.zp-top { background: #3b2f22; color: #eadfc6; }
+.zp-top .in { max-width: 920px; margin: 0 auto; padding: 16px; display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; }
+.zp-top h1 { margin: 0; font-size: 24px; letter-spacing: 4px; }
+.zp-top small { display: block; font-size: 12px; opacity: .7; letter-spacing: 0; }
+.zp-top form { display: flex; }
+.zp-top input { padding: 6px 8px; border: 0; width: 180px; }
+.zp-top button { background: #a3793f; color: #fff; border: 0; padding: 0 14px; cursor: pointer; }
+.zp-nav { background: #54442f; }
+.zp-nav .in { max-width: 920px; margin: 0 auto; display: flex; flex-wrap: wrap; }
+.zp-nav a { color: #eadfc6; text-decoration: none; padding: 8px 14px; font-size: 14px; }
+.zp-nav a.on { background: #6b573c; }
+.zp-wrap { max-width: 920px; margin: 18px auto 40px; padding: 0 16px; }
+.sheet { background: #fbf7ec; border: 1px solid #d9ccb0; padding: 20px 24px; margin-bottom: 14px; box-shadow: 0 1px 0 #d9ccb0; }
+.sheet h2 { margin: 0 0 12px; font-size: 20px; letter-spacing: 2px; }
+.sheet p { line-height: 1.9; margin: 6px 0; }
+table.person { border-collapse: collapse; width: 100%; max-width: 560px; }
+table.person th { width: 100px; text-align: right; color: #7a6544; font-weight: 400; padding: 7px 12px; vertical-align: top; }
+table.person td { padding: 7px 12px; border-bottom: 1px dotted #d9ccb0; }
+.tree, .tree ul { list-style: none; margin: 0; padding-left: 22px; }
+.tree { padding-left: 0; }
+.tree li { position: relative; padding: 4px 0 4px 14px; }
+.tree li::before { content: ''; position: absolute; left: 0; top: 15px; width: 10px; border-top: 1px solid #a89470; }
+.tree ul { border-left: 1px solid #a89470; margin-left: 6px; }
+.tree a { color: #2a241c; }
+.tree .dim { color: #9a8a70; font-size: 13px; }
+.res a { display: block; padding: 8px 0; border-bottom: 1px dotted #d9ccb0; color: #2a241c; text-decoration: none; }
+.res small { color: #9a8a70; margin-left: 8px; }
+.scan img { max-width: 100%; cursor: zoom-in; border: 1px solid #d9ccb0; }
+ol.fl li { margin: 6px 0; line-height: 1.8; }
+footer { text-align: center; color: #8a7a5e; font-size: 12px; padding: 10px 0 30px; line-height: 1.9; }
+</style>
+</head>
+<body>
+<header class="zp-top"><div class="in"><h1>白鹭渡许氏宗谱<small>数字化录入本 · 据1993年续修本</small></h1><form id="sf"><input id="q" placeholder="检索人名" aria-label="检索人名"><button type="submit">检索</button></form></div></header>
+<nav class="zp-nav"><div class="in"><a data-k="home" href="#/">首页</a><a data-k="tree" href="#/tree">世系</a><a data-k="fanli" href="#/fanli">凡例</a><a data-k="scan" href="#/scan">原谱影像</a></div></nav>
+<main class="zp-wrap" id="main"></main>
+<footer>白鹭渡许氏宗亲会　录入：许禾　技术支持：<a href="blog.html#/" target="_blank" rel="noopener">许禾</a>（小红书号 6529081560）<br>本站内容为虚构作品《小名》的一部分</footer>
+<script src="js/lunar-data.js"></script>
+<script src="js/core.js"></script>
+<script>
+(function () {
+  const esc = XM.esc;
+  const main = document.getElementById('main');
+  const P = {
+    dechang: { name: '许德昌', rows: [['世次', '第二十一世　德字辈'], ['生', '甲申年十月初十'], ['卒', '己亥年（2019）冬月'], ['配', '周氏桂香，壬午年三月初三生'], ['子', '建国　建军'], ['女', '秀英（适程）　秀芝（适王）']] },
+    guixiang: { name: '周桂香', rows: [['身份', '德昌公配'], ['生', '壬午年三月初三'], ['籍', '宁川县周家湾']] },
+    jianguo: { name: '许建国', rows: [['世次', '第二十二世　建字辈'], ['父', '德昌公长子'], ['生', '丙午年腊月十八'], ['配', '李氏秋云'], ['子', '一（殇，不录）'], ['备注', '水府庙理事']] },
+    jianjun: { name: '许建军', rows: [['世次', '第二十二世　建字辈'], ['父', '德昌公次子'], ['生', '庚戌年四月廿一'], ['配', '吴氏'], ['女', '禾']] },
+    xiuying: { name: '许秀英', rows: [['父', '德昌公长女'], ['生', '戊申年八月十二'], ['适', '程']] },
+    xiuzhi: { name: '许秀芝', rows: [['父', '德昌公次女'], ['生', '甲寅年正月初六'], ['适', '王']] },
+    xuhe: { name: '许禾', rows: [['世次', '第二十三世'], ['父', '建军公之女'], ['生', '丙戌年六月初九辰时'], ['乳名', '—（依俗不录）'], ['录入', '本人，2026年8月3日']] }
+  };
+  function nav(k) { document.querySelectorAll('.zp-nav a').forEach(a => a.classList.toggle('on', a.dataset.k === k)); }
+  function home() {
+    nav('home');
+    main.innerHTML = '<div class="sheet"><h2>前言</h2><p>白鹭渡许氏自明末迁居宁川河边，到今天二十三世。老谱民国三十六年重修过一次，1993年续修一次，纸本存放在水府庙。</p><p>2026年暑假，宗亲会请许禾把卷三（德字辈以下）录成电子版，方便在外的族人查阅。卷一卷二还在录。</p><p>有错漏请联系水府庙管事。</p></div>' +
+      '<div class="sheet"><h2>卷三目录</h2><div class="res">' + Object.keys(P).map(id => '<a href="#/p/' + id + '">' + esc(P[id].name) + '<small>' + esc(P[id].rows[0][1]) + '</small></a>').join('') + '</div></div>';
+    document.title = '白鹭渡许氏宗谱';
+  }
+  function tree() {
+    nav('tree');
+    const a = id => '<a href="#/p/' + id + '">' + esc(P[id].name) + '</a>';
+    main.innerHTML = '<div class="sheet"><h2>卷三世系</h2><ul class="tree"><li>' + a('dechang') + '　配 ' + a('guixiang') + '<ul>' +
+      '<li>' + a('jianguo') + '　配 李秋云<ul><li class="dim">子一　殇，不录</li></ul></li>' +
+      '<li>' + a('jianjun') + '　配 吴氏<ul><li>' + a('xuhe') + '</li></ul></li>' +
+      '<li>' + a('xiuying') + '　<span class="dim">适程</span></li><li>' + a('xiuzhi') + '　<span class="dim">适王</span></li></ul></li></ul></div>';
+    document.title = '世系 - 白鹭渡许氏宗谱';
+  }
+  function person(id) {
+    const p = P[id];
+    if (!p) return home();
+    nav('');
+    main.innerHTML = '<div class="sheet"><h2>' + esc(p.name) + '</h2><table class="person">' + p.rows.map(r => '<tr><th>' + esc(r[0]) + '</th><td>' + esc(r[1]) + '</td></tr>').join('') + '</table><p style="margin-top:14px"><a href="#/tree">看世系</a></p></div>';
+    document.title = p.name + ' - 白鹭渡许氏宗谱';
+  }
+  function search(q) {
+    nav('');
+    const kw = (q || '').trim();
+    const k = XM.norm(kw);
+    document.getElementById('q').value = kw;
+    const hits = Object.keys(P).filter(id => k && XM.norm(P[id].name).includes(k));
+    let note = '';
+    if (!hits.length && /平/.test(k)) note = '<p>谱中没有这个名字。凡例：殇不入谱，乳名不录。</p>';
+    main.innerHTML = '<div class="sheet"><h2>检索：' + esc(kw) + '</h2><div class="res">' + (hits.length ? hits.map(id => '<a href="#/p/' + id + '">' + esc(P[id].name) + '<small>' + esc(P[id].rows[0][1]) + '</small></a>').join('') : (note || '<p>卷三里没有找到。卷一卷二还在录入。</p>')) + '</div></div>';
+  }
+  function fanli() {
+    nav('fanli');
+    main.innerHTML = '<div class="sheet"><h2>凡例</h2><ol class="fl"><li>本电子版以1993年续修本为底本，补录到2026年。</li><li>男女都录。女儿注明所适之姓。</li><li>殇不入谱。未满二十岁亡故的，只记“殇”，不录名。</li><li>乳名不录，依本村旧俗。</li><li>生辰用农历干支纪年。</li><li>电子版录入：许禾，2026年7月至8月。</li></ol></div>';
+  }
+  function scan() {
+    nav('scan');
+    main.innerHTML = '<div class="sheet scan"><h2>原谱影像 · 卷三</h2><img src="assets/img/zupu-scan.jpg" alt="族谱卷三影像" data-zoom><p style="font-size:13px;color:#8a7a5e">纸本藏水府庙。拍摄：许禾，2026年8月。</p></div>';
+  }
+  document.getElementById('sf').addEventListener('submit', e => { e.preventDefault(); location.hash = '#/s/' + encodeURIComponent(document.getElementById('q').value.trim()); });
+  XM.route([[/^\/$/, home], [/^\/tree$/, tree], [/^\/p\/(\w+)$/, person], [/^\/s\/(.*)$/, search], [/^\/fanli$/, fanli], [/^\/scan$/, scan]], home);
+})();
+</script>
+</body>
+</html>

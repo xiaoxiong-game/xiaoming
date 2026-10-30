@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>禾的小站</title>
+<link rel="stylesheet" href="css/common.css">
+<style>
+body { background: #fafaf7; color: #333; font-family: Georgia, "Songti SC", SimSun, serif; }
+.head { text-align: center; padding: 40px 16px 10px; }
+.head img { width: 72px; height: 72px; border-radius: 50%; object-fit: cover; }
+.head h1 { margin: 10px 0 4px; font-size: 26px; font-weight: 400; letter-spacing: 3px; }
+.head p { color: #999; margin: 0; font-size: 14px; }
+.head nav { margin-top: 14px; }
+.head nav a { color: #666; margin: 0 10px; text-decoration: none; font-size: 14px; }
+.wrap { max-width: 680px; margin: 10px auto 50px; padding: 0 18px; }
+.post-item { padding: 18px 0; border-bottom: 1px solid #eee; }
+.post-item h2 { margin: 0 0 6px; font-size: 20px; font-weight: 400; }
+.post-item h2 a { color: #333; text-decoration: none; }
+.post-item h2 a:hover { color: #6a8f3c; }
+.date { color: #aaa; font-size: 13px; }
+.lock { font-size: 12px; background: #eee; color: #888; border-radius: 3px; padding: 0 6px; margin-left: 6px; }
+article h1 { font-weight: 400; font-size: 26px; margin: 20px 0 6px; }
+article p { line-height: 2; margin: 0 0 16px; font-size: 16px; }
+article .date { margin-bottom: 24px; display: block; }
+.pw { border: 1px solid #ddd; background: #fff; padding: 18px; text-align: center; margin-top: 20px; }
+.pw input { padding: 7px; border: 1px solid #ccc; width: 200px; }
+.pw button { padding: 7px 16px; border: 0; background: #6a8f3c; color: #fff; cursor: pointer; }
+.pw .hint { color: #999; font-size: 13px; margin-top: 10px; }
+.pw .err { color: #c33; font-size: 13px; min-height: 18px; }
+.letter p { text-indent: 0; }
+.about p { line-height: 1.9; }
+footer { text-align: center; color: #bbb; font-size: 12px; padding: 20px 0 40px; }
+</style>
+</head>
+<body>
+<header class="head"><img src="assets/img/av-xuhe.jpg" alt=""><h1>禾的小站</h1><p>记点东西</p><nav><a href="#/">文章</a><a href="#/about">关于</a></nav></header>
+<main class="wrap" id="main"></main>
+<footer>禾的小站 · 本站内容为虚构作品《小名》的一部分</footer>
+<script src="js/core.js"></script>
+<script>
+(function () {
+  const esc = XM.esc;
+  const main = document.getElementById('main');
+  const POSTS = [
+    { id: 'shanle', title: '删了', date: '2026-08-21 01:02', body: ['小红书上写渡口和族谱的那几篇笔记，我都删了。主页留了几句话，懂的人能看懂。', '族谱网站先不动，陈伯出院回来还要用。'] },
+    { id: 'xin', title: '如果我没回来', date: '2026-08-24 23:50', locked: true },
+    { id: 'xiaoming', title: '为什么族谱里不写小名', date: '2026-08-04 22:30', body: ['录族谱录到自己那一栏，乳名那格我想填，奶奶不让。', '她讲，大名是给外人叫的，写在谱上、写在户口上、写在灯上都行。[[小名是屋里人叫的，不能落在纸上。写下来，就谁都叫得到了]]。', '我问谁是“谁都”。她不答，去灶屋烧火了。', '我小时候发高烧，奶奶半夜去渡口喊过我一回，我还记得她那天的声音。所以这格空着就空着吧。', '凡例里我也照写了：乳名不录，依本村旧俗。'] },
+    { id: 'shangwang', title: '把族谱搬上网', date: '2026-08-01 23:15', body: ['暑假在奶奶家，帮宗亲会把卷三录成了网页，顺便给水府庙做了个网站。', '网站两块：族谱查询，还有中元放灯的网上登记。登记表单提交以后，会用庙里的账号自动提交到仓库的 lanterns/ 目录，每盏灯一条记录，[[提交时间就是登记时间]]，提交的标题里也写着。这样陈伯想查哪天谁登的，翻提交记录就行。', '后台账号交给陈伯了，[[他住院那几天交给大伯代管]]。', '[[代码在 GitHub 上，开源社暑期项目展的海报上有链接]]。'], link: ['club.html#/', '开源社'] },
+    { id: 'fen', title: '宁川的粉', date: '2026-07-05 12:20', body: ['回来第一顿是渡口小卖部隔壁的米粉。老板还记得我，说我小时候吃粉不吃葱。现在吃了。'] },
+    { id: 'qimo', title: '期末周', date: '2026-06-28 02:10', body: ['数据结构考完了。最后一题是并查集，写到一半想起来路径压缩没写。算了。'] }
+  ];
+  const LETTER = ['溪：', '你能打开这篇，说明你还记得那年的灯。', '长话短说。有人在庙里给我登了一盏灯。灯是给死人放的。', '我撤过一次，他又登上了。仓库里每次提交都有时间，你去看。',
+    '这一盏七月十三晚上就放下水了，网上撤不了。怎么撤，老辈有老辈的办法，奶奶晓得。你去找奶奶。',
+    '光撤灯不够。他手上有庙里的账号，撤了还能再登。去找陈伯，让他把账号锁了。他的微聊号是 shuifu-chen，认人不认号，加他要报家门。', '要是我真被叫走了，奶奶会去渡口喊我。她喊的是我的小名，你听过，就在我发给你的那条语音里。', '别写下来。打字也不行。', '禾'];
+
+  function list() {
+    main.innerHTML = POSTS.map(p => '<div class="post-item"><h2><a href="#/p/' + p.id + '">' + esc(p.title) + '</a>' + (p.locked ? '<span class="lock">加密</span>' : '') + '</h2><div class="date">' + p.date + '</div></div>').join('');
+    document.title = '禾的小站';
+  }
+  function post(id) {
+    const p = POSTS.find(x => x.id === id);
+    if (!p) return list();
+    document.title = p.title + ' - 禾的小站';
+    if (p.locked) return locked(p);
+    main.innerHTML = '<article><h1>' + esc(p.title) + '</h1><span class="date">' + p.date + '</span>' + p.body.map(t => '<p>' + XM.rich(t) + '</p>').join('') +
+      (p.link ? '<p><a href="' + p.link[0] + '" target="_blank" rel="noopener">' + esc(p.link[1]) + '</a></p>' : '') + '<p><a href="#/">← 返回</a></p></article>';
+  }
+  function locked(p) {
+    const open = XM.preview || XM.flag('letterRead');
+    if (open) {
+      XM.set('letterRead');
+      main.innerHTML = XM.previewBanner() + '<article class="letter"><h1>' + esc(p.title) + '</h1><span class="date">' + p.date + '</span>' + LETTER.map(t => '<p>' + esc(t) + '</p>').join('') + '<p><a href="#/">← 返回</a></p></article>';
+      return;
+    }
+    main.innerHTML = '<article><h1>' + esc(p.title) + '</h1><span class="date">' + p.date + '</span><div class="pw"><p>这是一篇加密文章，输入密码查看。</p><form id="pf"><input id="pwd" type="password" aria-label="密码"> <button type="submit">查看</button></form><div class="err" id="err"></div></div></article>';
+    document.getElementById('pf').addEventListener('submit', e => {
+      e.preventDefault();
+      const v = XM.norm(document.getElementById('pwd').value).replace(/(年|nian)$/, '');
+      if (v === 'jiawu') { XM.set('letterRead'); locked(p); return; }
+      document.getElementById('err').textContent = /^\d{4}$/.test(v) ? '奶奶不这么说年份' : /[^\x00-\x7f]/.test(v) ? '密码只能是字母或数字' : '密码不对';
+    });
+  }
+  function about() {
+    main.innerHTML = '<div class="about"><p>许禾，临江大学计算机系2024级，宁川白鹭渡人。</p><p>小红书：禾不是河。</p><p>这里记点不想发到别处的东西。</p></div>';
+    document.title = '关于 - 禾的小站';
+  }
+  XM.route([[/^\/$/, list], [/^\/p\/(\w+)$/, post], [/^\/about$/, about]], list);
+})();
+</script>
+</body>
+</html>

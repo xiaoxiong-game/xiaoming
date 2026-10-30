@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>鹅聊空间</title>
+<link rel="stylesheet" href="css/common.css">
+<style>
+body { background: #dfe9f3 url('assets/img/pingping-lantern.jpg') center top/cover fixed; color: #222; }
+body.locked { background: #e9eef4; }
+.sp-bar { background: rgba(20, 40, 70, .88); color: #fff; }
+.sp-bar .in { max-width: 900px; margin: 0 auto; padding: 8px 16px; display: flex; align-items: center; gap: 12px; font-size: 14px; }
+.sp-bar b { font-size: 18px; color: #ffd24c; }
+.sp-wrap { max-width: 900px; margin: 18px auto 40px; padding: 0 16px; }
+.panel { background: rgba(255, 255, 255, .95); border-radius: 6px; padding: 18px 20px; margin-bottom: 14px; }
+.head { display: flex; gap: 16px; align-items: center; }
+.head img { width: 90px; height: 90px; border-radius: 6px; object-fit: cover; cursor: zoom-in; }
+.head h1 { margin: 0; font-size: 22px; }
+.head .info { color: #666; font-size: 13px; margin-top: 4px; }
+.tabs { display: flex; gap: 4px; margin-top: 14px; border-bottom: 2px solid #2b6cb0; }
+.tabs a { padding: 6px 14px; text-decoration: none; color: #2b6cb0; font-size: 14px; border-radius: 4px 4px 0 0; }
+.tabs a.on { background: #2b6cb0; color: #fff; }
+.gate { max-width: 420px; margin: 60px auto; text-align: center; }
+.gate input { width: 100%; padding: 9px; border: 1px solid #bbb; border-radius: 4px; margin: 10px 0; font-size: 15px; }
+.gate button { background: #2b6cb0; color: #fff; border: 0; border-radius: 4px; padding: 8px 24px; cursor: pointer; }
+.gate .err { color: #c00; font-size: 13px; min-height: 18px; }
+.item { border-bottom: 1px solid #eee; padding: 12px 0; }
+.item .t { color: #999; font-size: 12px; }
+.item h3 { margin: 0 0 6px; font-size: 16px; }
+.item h3 a { color: #2b6cb0; text-decoration: none; }
+.item p { margin: 6px 0; line-height: 1.8; }
+.item img { max-width: 280px; display: block; margin-top: 6px; cursor: zoom-in; }
+.msg { display: flex; gap: 10px; padding: 10px 0; border-bottom: 1px solid #eee; }
+.msg img { width: 40px; height: 40px; border-radius: 4px; object-fit: cover; }
+.msg .n { color: #2b6cb0; font-size: 13px; }
+.msg .t { color: #999; font-size: 12px; margin-left: 8px; }
+.msg.anon .n { color: #888; }
+.msg.anon .body { color: #2c4a5a; font-family: SimSun, serif; }
+.anon-av { width: 40px; height: 40px; border-radius: 4px; background: #23343d; flex: none; }
+.blog p { text-indent: 2em; line-height: 1.95; margin: 0 0 12px; }
+footer { text-align: center; font-size: 12px; color: #667; padding: 10px; }
+</style>
+</head>
+<body>
+<div class="sp-bar"><div class="in"><b>鹅聊空间</b><span>看看好友在干什么</span></div></div>
+<main class="sp-wrap" id="main"></main>
+<footer>鹅聊空间 · 本站内容为虚构作品《小名》的一部分</footer>
+<script src="js/lunar-data.js"></script>
+<script src="js/core.js"></script>
+<script>
+(function () {
+  const esc = XM.esc;
+  const main = document.getElementById('main');
+  const ID = '28150906';
+  const BLOG = [
+    '明天我生日，十五岁，正好又是七月半。',
+    '爸非要在生日灯上写“平平平安”，说四个字凑一起好看，水府庙的菩萨也认得。我说我十五了，别再叫平平，同学听到要笑一年。他说[[灯上就要写小名]]，大名是给外人叫的。',
+    '吵不过他。他写字的时候手抖，平字写歪了一个。',
+    '姐下午一直在渡口台阶上搞她的族谱，一本一本拍照，说要放到网上去。我问她族谱上有没有我，她翻给我看，说你的大名早就上了。我说那小名呢，她说[[小名不上谱]]，奶奶说的，[[上了谱就叫得到了]]。',
+    '我问叫得到是什么意思。她说她也不懂，老人讲的。',
+    '明天晚上她陪我去放灯。'
+  ];
+  const MSGS = [
+    ['阿浩', 'u-qiang', '2025-09-06 07:02', '生日快乐平平哈哈哈哈'],
+    ['小胖', 'u-chen', '2025-09-06 12:40', '十五了还平平，生日快乐'],
+    ['阿浩', 'u-qiang', '2025-09-08 21:13', '兄弟一路走好'],
+    ['班长', 'u-xiayu', '2025-09-10 19:30', '许平，班上给你留着座位。'],
+    ['渡口老许', 'av-laoxu', '2025-09-20 23:52', '平平，爸的手机一直开着，号不换，还是尾号0906那个。想家了就打。'],
+    ['小胖', 'u-chen', '2025-12-31 23:59', '新年快乐。我还是会来这里说一声。'],
+    ['阿浩', 'u-qiang', '2026-06-01 20:05', '中考完了，我们都考得不好，你肯定笑我们'],
+    ['秋云', 'u-laoxu', '2026-08-13 02:52', '平平，七月了。妈给你点了灯，窗户开着。']
+  ];
+  const SHUO = [
+    ['2025-09-06 18:40', '十五岁。晚上去渡口放灯，灯是爸写的，丑。'],
+    ['2025-08-30 22:15', '宣布一下，以后谁再叫我平平我就拉黑谁，包括我爸。'],
+    ['2025-07-02 16:03', '放假了！姐回来了，说带我去县城吃粉。'],
+    ['2025-06-20 23:05', '打球回来晚了。跟我妈约好的，晚了不敲门，[[在窗户底下吹两声口哨]]，她就下来开门，灯都不开，免得吵醒我爸。']
+  ];
+  const ANON = [['2026-08-14 02:20', '水里好冷。我想回家。'], ['2026-08-22 03:10', '快了。'], ['2026-08-25 23:11', '姐应了一声。']];
+
+  function home() {
+    main.innerHTML = '<div class="panel gate"><h2>访问好友空间</h2><p>输入鹅聊号</p><input id="qq" inputmode="numeric" aria-label="鹅聊号"><div class="err" id="err"></div><button type="button" id="go">进入</button></div>';
+    document.body.classList.add('locked');
+    const go = () => {
+      const v = XM.norm(document.getElementById('qq').value);
+      if (v === ID) { location.hash = '#/' + ID; return; }
+      document.getElementById('err').textContent = /^\d{5,11}$/.test(v) ? '该用户不存在或已注销' : '请输入正确的鹅聊号';
+    };
+    document.getElementById('go').addEventListener('click', go);
+    document.getElementById('qq').addEventListener('keydown', e => { if (e.key === 'Enter') go(); });
+  }
+  function gate(sub) {
+    if (XM.preview || XM.flag('spaceOpened')) return page(sub);
+    document.body.classList.add('locked');
+    main.innerHTML = '<div class="panel gate"><h2>平平别叫我平平 的空间</h2><p>主人设置了访问权限，回答问题后进入：</p><p><b>我最讨厌别人叫我什么？</b></p><input id="ans" aria-label="答案"><div class="err" id="err"></div><button type="button" id="go">确定</button></div>';
+    const go = () => {
+      const v = XM.norm(document.getElementById('ans').value);
+      if (v === '平平') { XM.set('spaceOpened'); page(sub); return; }
+      document.getElementById('err').textContent = v ? '答案不对' : '请输入答案';
+    };
+    document.getElementById('go').addEventListener('click', go);
+    document.getElementById('ans').addEventListener('keydown', e => { if (e.key === 'Enter') go(); });
+  }
+  function page(sub) {
+    document.body.classList.remove('locked');
+    sub = sub || 'main';
+    const tab = (k, t) => '<a href="#/' + ID + (k === 'main' ? '' : '/' + k) + '" class="' + (sub === k ? 'on' : '') + '">' + t + '</a>';
+    let body = '';
+    if (sub === 'main' || sub === 'shuo') {
+      body = SHUO.map(s => '<div class="item"><div class="t">' + s[0] + '</div><p>' + XM.rich(s[1]) + '</p></div>').join('');
+    } else if (sub === 'blog') {
+      body = '<div class="item"><h3><a href="#/' + ID + '/blog/1">生日</a></h3><div class="t">2025-09-05 23:41　阅读(214)</div></div><div class="item"><h3>初二上学期总结</h3><div class="t">2024-01-20 21:02　仅自己可见</div></div>';
+    } else if (sub === 'blog/1') {
+      body = '<div class="item blog"><h3>生日</h3><div class="t">2025-09-05 23:41</div>' + BLOG.map(p => '<p>' + XM.rich(p) + '</p>').join('') + '</div>';
+    } else if (sub === 'photo') {
+      body = '<div class="item"><div class="t">相册：生日　2025-09-06 20:12</div><img src="assets/img/pingping-lantern.jpg" alt="生日灯" data-zoom></div>';
+    } else if (sub === 'msg') {
+      body = MSGS.map(m => '<div class="msg"><img src="assets/img/' + m[1] + '.jpg" alt=""><div><span class="n">' + esc(m[0]) + '</span><span class="t">' + m[2] + '</span><div class="body">' + esc(m[3]) + '</div></div></div>').join('') +
+        ANON.map(m => '<div class="msg anon"><div class="anon-av"></div><div><span class="n">（无名）</span><span class="t">' + m[0] + '</span><div class="body">' + esc(XM.reverse(m[1])) + '</div></div></div>').join('');
+    }
+    main.innerHTML = XM.previewBanner() + '<div class="panel"><div class="head"><img src="assets/img/av-pingping.jpg" alt="头像" data-zoom><div><h1>平平别叫我平平</h1><div class="info">男　15岁　白鹭渡　鹅聊号 ' + ID + '</div><div class="info">个性签名：说了别叫我平平</div></div></div>' +
+      '<nav class="tabs">' + tab('main', '主页') + tab('blog', '日志') + tab('shuo', '说说') + tab('photo', '相册') + tab('msg', '留言板') + '</nav></div><div class="panel">' + body + '</div>';
+    document.title = '平平别叫我平平的空间';
+  }
+  XM.route([[/^\/$/, home], [/^\/28150906$/, () => gate()], [/^\/28150906\/(.+)$/, s => gate(s)]], home);
+})();
+</script>
+</body>
+</html>

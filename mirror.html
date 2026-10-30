@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>码仓 · LJU OSC 镜像</title>
+<link rel="stylesheet" href="css/common.css">
+<style>
+body { background: #fff; color: #1f2328; font-family: -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif; font-size: 14px; }
+a { color: #0969da; text-decoration: none; }
+a:hover { text-decoration: underline; }
+.mh { background: #24292f; color: #fff; }
+.mh .in { max-width: 1012px; margin: 0 auto; padding: 12px 16px; display: flex; align-items: center; gap: 16px; }
+.mh b { font-size: 16px; }
+.mh small { color: #8c959f; }
+.mh form { flex: 1; max-width: 340px; margin-left: auto; }
+.mh input { width: 100%; background: #24292f; border: 1px solid #57606a; border-radius: 6px; color: #fff; padding: 5px 10px; }
+.wrap { max-width: 1012px; margin: 0 auto; padding: 20px 16px 40px; }
+.sync { background: #fff8c5; border: 1px solid #d4a72c66; border-radius: 6px; padding: 10px 14px; margin-bottom: 16px; }
+.repo-h { font-size: 20px; margin: 0 0 12px; }
+.repo-h img { width: 22px; height: 22px; border-radius: 50%; vertical-align: -5px; margin-right: 6px; }
+.tabs { display: flex; gap: 4px; border-bottom: 1px solid #d0d7de; margin-bottom: 16px; }
+.tabs a { padding: 8px 14px; color: #1f2328; border-bottom: 2px solid transparent; }
+.tabs a.on { border-color: #fd8c73; font-weight: 600; }
+.box { border: 1px solid #d0d7de; border-radius: 6px; margin-bottom: 16px; overflow: hidden; }
+.box .bh { background: #f6f8fa; padding: 10px 14px; border-bottom: 1px solid #d0d7de; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.box .bh img { width: 20px; height: 20px; border-radius: 50%; }
+.box .bh .muted { color: #656d76; margin-left: auto; }
+.frow { display: flex; padding: 8px 14px; border-top: 1px solid #d8dee4; gap: 10px; }
+.frow:first-child { border-top: 0; }
+.frow .ic { width: 18px; color: #54aeff; }
+.frow .nm { width: 220px; }
+.frow .msg { flex: 1; color: #656d76; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.frow .tm { color: #656d76; }
+.md { padding: 16px 24px; line-height: 1.7; font-size: 15px; }
+.md h1 { font-size: 26px; border-bottom: 1px solid #d8dee4; padding-bottom: 6px; }
+.md h2 { font-size: 20px; border-bottom: 1px solid #d8dee4; padding-bottom: 4px; }
+.md code { background: #eff1f3; padding: 1px 5px; border-radius: 4px; font-size: 13px; }
+.md table { border-collapse: collapse; }
+.md th, .md td { border: 1px solid #d0d7de; padding: 5px 12px; }
+.md th { background: #f6f8fa; }
+pre.code { margin: 0; padding: 12px 16px; font: 13px/1.6 Consolas, monospace; overflow-x: auto; white-space: pre; }
+pre.code .add { background: #dafbe1; display: block; }
+pre.code .del { background: #ffebe9; display: block; }
+.crow { display: flex; padding: 10px 14px; border-top: 1px solid #d8dee4; gap: 10px; align-items: center; }
+.crow:first-child { border-top: 0; }
+.crow img { width: 20px; height: 20px; border-radius: 50%; }
+.crow .t { flex: 1; }
+.crow .t a { color: #1f2328; font-weight: 600; }
+.crow .t div { color: #656d76; font-size: 12px; margin-top: 2px; }
+.sha { font-family: Consolas, monospace; font-size: 12px; border: 1px solid #d0d7de; border-radius: 6px; padding: 2px 8px; color: #1f2328; }
+.day { color: #656d76; font-size: 13px; margin: 14px 0 6px; }
+.user { display: flex; gap: 24px; }
+.user .l { width: 230px; flex: none; }
+.user .l img { width: 230px; height: 230px; border-radius: 50%; object-fit: cover; border: 1px solid #d0d7de; cursor: zoom-in; }
+.user .l h2 { margin: 10px 0 0; font-size: 22px; }
+.user .l .lg { color: #656d76; font-size: 18px; }
+.user .r { flex: 1; }
+.rcard { border: 1px solid #d0d7de; border-radius: 6px; padding: 14px; margin-bottom: 10px; }
+.rcard p { color: #656d76; margin: 6px 0 0; }
+footer { text-align: center; color: #8c959f; font-size: 12px; padding: 20px; }
+@media (max-width: 760px) { .user { flex-direction: column; } .frow .nm { width: 140px; } .frow .msg { display: none; } }
+</style>
+</head>
+<body>
+<header class="mh"><div class="in"><a href="#/" style="color:#fff"><b>码仓</b></a><small>LJU OSC · GitHub 镜像 · 每小时同步</small><form id="sf"><input id="q" placeholder="搜索用户或仓库" aria-label="搜索用户或仓库"></form></div></header>
+<main class="wrap" id="main"></main>
+<footer>码仓由临江大学开源社维护，仅供校内加速访问 · 本站内容为虚构作品《小名》的一部分</footer>
+<script src="js/core.js"></script>
+<script>
+(function () {
+  const esc = XM.esc;
+  const main = document.getElementById('main');
+  const REPO = 'xuhe06/bailudu-zupu';
+  const DESC = '白鹭渡许氏宗谱数字化 + 水府庙网站（虚构作品《小名》的一部分）';
+  const AV = { xuhe06: 'assets/img/av-xuhe.jpg', 'bailudu-temple': 'assets/img/temple.jpg' };
+  const LAMPS = {
+    '2026-0711-01': '陈德厚,甲戌年三月十二,七月十一', '2026-0711-02': '陈氏历代,—,七月十一', '2026-0711-05': '周长林,壬午年腊月初八,七月十一',
+    '2026-0712-03': '王金凤,戊子年正月廿二,七月十二', '2026-0712-11': '许氏历代,—,七月十二', '2026-0712-14': '李满仓,辛未年九月初三,七月十二',
+    '2026-0713-01': '周玉兰,乙丑年五月十七,七月十三', '2026-0713-03': '许平,庚寅年七月廿八,七月十三', '2026-0713-07': '许禾,丙戌年六月初九,七月十三',
+    '2026-0714-02': '黄有才,己亥年冬月初一,七月十四', '2026-0714-06': '胡秀珍,癸酉年八月十五,七月十四', '2026-0714-09': '董春生,丁卯年二月初二,七月十四',
+    '2026-0715-01': '李氏历代,—,七月十五', '2026-0715-04': '王建设,乙巳年四月初六,七月十五', '2026-0715-08': '陈小梅,庚子年六月十九,七月十五',
+    '2026-0715-12': '许德昌,甲申年十月初十,七月十五', '2026-0715-15': '方桂英,丙子年三月廿四,七月十五', '2026-0715-21': '金福生,甲子年腊月十六,七月十五',
+    '2026-0715-22': '周氏历代,—,七月十五'
+  };
+  // Same commits, SHAs and messages as the real repo (tools/gh_publish.py, real-accounts/bailudu-zupu-commits.json).
+  const C = [
+    ['c87a3ba', '2026-08-23 10:12', 'bailudu-temple', '加灯：2026-0715-22（2026-08-23 10:12 登记）', 'add', '来源：网站表单'],
+    ['eeaac06', '2026-08-22 03:05', 'bailudu-temple', '加灯：2026-0713-07（2026-08-22 03:05 登记）', 'add', '来源：后台'],
+    ['25eb9cc', '2026-08-21 19:42', 'bailudu-temple', '加灯：2026-0715-21（2026-08-21 19:42 登记）', 'add', '来源：网站表单'],
+    ['17d4a13', '2026-08-20 21:46', 'xuhe06', '撤：2026-0713-07（灯主本人未同意）', 'del', '灯主还活着。'],
+    ['d3efb7f', '2026-08-20 10:15', 'bailudu-temple', '加灯：2026-0715-15（2026-08-20 10:15 登记）', 'add', '来源：网站表单'],
+    ['0aa60b4', '2026-08-19 16:30', 'bailudu-temple', '加灯：2026-0715-12（2026-08-19 16:30 登记）', 'add', '来源：后台'],
+    ['aaba109', '2026-08-18 09:02', 'bailudu-temple', '加灯：2026-0715-08（2026-08-18 09:02 登记）', 'add', '来源：后台'],
+    ['7c75094', '2026-08-14 11:24', 'bailudu-temple', '加灯：2026-0715-04（2026-08-14 11:24 登记）', 'add', '来源：网站表单'],
+    ['09629e8', '2026-08-13 02:17', 'bailudu-temple', '加灯：2026-0713-07（2026-08-13 02:17 登记）', 'add', '来源：后台'],
+    ['5745504', '2026-08-12 15:48', 'bailudu-temple', '加灯：2026-0715-01（2026-08-12 15:48 登记）', 'add', '来源：网站表单'],
+    ['22a232c', '2026-08-12 09:31', 'bailudu-temple', '加灯：2026-0714-09（2026-08-12 09:31 登记）', 'add', '来源：网站表单'],
+    ['e627744', '2026-08-11 20:05', 'bailudu-temple', '加灯：2026-0714-06（2026-08-11 20:05 登记）', 'add', '来源：网站表单'],
+    ['2734a50', '2026-08-10 18:40', 'bailudu-temple', '加灯：2026-0714-02（2026-08-10 18:40 登记）', 'add', '来源：网站表单'],
+    ['4c461b5', '2026-08-09 21:12', 'bailudu-temple', '加灯：2026-0713-03（2026-08-09 21:12 登记）', 'add', '来源：网站表单'],
+    ['71dfc27', '2026-08-07 10:20', 'bailudu-temple', '加灯：2026-0713-01（2026-08-07 10:20 登记）', 'add', '来源：后台'],
+    ['0429950', '2026-08-06 17:55', 'bailudu-temple', '加灯：2026-0712-14（2026-08-06 17:55 登记）', 'add', '来源：网站表单'],
+    ['5b1c76b', '2026-08-06 08:47', 'bailudu-temple', '加灯：2026-0712-11（2026-08-06 08:47 登记）', 'add', '来源：后台'],
+    ['d599ece', '2026-08-05 14:09', 'bailudu-temple', '加灯：2026-0712-03（2026-08-05 14:09 登记）', 'add', '来源：网站表单'],
+    ['137fd24', '2026-08-04 19:33', 'bailudu-temple', '加灯：2026-0711-05（2026-08-04 19:33 登记）', 'add', '来源：网站表单'],
+    ['90274e0', '2026-08-03 23:05', 'xuhe06', '卷三录完', 'none', '德字辈以下全部录入。'],
+    ['ce25b54', '2026-08-03 16:21', 'bailudu-temple', '加灯：2026-0711-02（2026-08-03 16:21 登记）', 'add', '来源：网站表单'],
+    ['3e70951', '2026-08-03 16:18', 'bailudu-temple', '加灯：2026-0711-01（2026-08-03 16:18 登记）', 'add', '来源：网站表单'],
+    ['8281255', '2026-08-01 22:58', 'xuhe06', '放灯登记上线', 'none', '表单提交后用 bailudu-temple 账号自动提交到 lanterns/2026.csv。'],
+    ['99fd487', '2026-07-26 21:40', 'xuhe06', '民俗：取名旧俗', 'none', ''],
+    ['53ae53d', '2026-07-12 20:03', 'xuhe06', 'init', 'none', '']
+  ];
+  const lampOf = c => c[3].replace(/^加灯：|^撤：/, '').replace(/（.*$/, '');
+  function lampLine(no, date) { return no + ',' + LAMPS[no] + ',' + date; }
+  function csv2026() {
+    const live = new Map();
+    C.slice().reverse().forEach(c => {
+      if (c[4] === 'add') live.set(lampOf(c), c[1].slice(0, 10));
+      if (c[4] === 'del') live.delete(lampOf(c));
+    });
+    return ['灯号,灯主,生辰,放灯日,登记日期'].concat(Array.from(live.keys()).sort().map(no => lampLine(no, live.get(no)))).join('\n');
+  }
+  const md = s => '<div class="md">' + s + '</div>';
+  const code = s => '<pre class="code">' + esc(s) + '</pre>';
+  const FILES = {
+    'README.md': () => md('<h1>bailudu-zupu</h1><p>白鹭渡许氏宗谱数字化，顺带给水府庙做的网站。</p><ul><li><code>site/</code> 网站代码（族谱查询 + 中元放灯登记）</li><li><code>scans/</code> 卷三影像</li><li><code>docs/</code> 凡例</li><li><code>lanterns/</code> 放灯登记数据。网站表单提交后，用 <code>bailudu-temple</code> 账号自动提交，提交时间就是登记时间。2025 年的数据是照纸本登记簿补录的。</li></ul>' +
+      '<h2>查登记记录</h2><p>陈伯要查哪盏灯是哪天几点、用哪个账号登的：打开 <code>lanterns/2026.csv</code>，点右上角的 <b>History</b>，每一条提交就是一次登记或撤灯，标题里写着登记时间（北京时间）。</p>' +
+      '<h2>账号</h2><p>网站后台账号由水府庙管事保管。管事不在时交给理事代管，用后台登的灯，提交说明里写“来源：后台”。</p>' +
+      '<h2>说明</h2><p>族谱只录大名，乳名不录，见 <code>docs/凡例.md</code>。</p><hr><p>本仓库是虚构作品《小名》的一部分，人物、地点、机构都是编的。</p>'),
+    'docs/凡例.md': () => md('<h1>凡例</h1><ol><li>以1993年续修本为底本，补录到2026年。</li><li>男女都录，女儿注明所适之姓。</li><li>殇不入谱：未满二十岁亡故的只记“殇”，不录名。</li><li>乳名不录，依本村旧俗。</li><li>生辰用农历干支纪年。</li></ol>'),
+    'lanterns/2025.csv': () => code(['灯号,灯主,生辰,放灯日,登记日期', '2025-0715-03,陈德厚,甲戌年三月十二,七月十五,2025-08-30', '2025-0715-07,许氏历代,—,七月十五,2025-09-01', '2025-0715-12,周长林,壬午年腊月初八,七月十五,2025-09-02', '2025-0715-15,李满仓,辛未年九月初三,七月十五,2025-09-03', '2025-0715-20,黄有才,己亥年冬月初一,七月十五,2025-09-05'].join('\n')),
+    'lanterns/2026.csv': () => code(csv2026()),
+    'scans/juan3-p12.jpg': () => md('<img src="assets/img/zupu-scan.jpg" alt="卷三第12页" data-zoom style="max-width:100%;cursor:zoom-in">'),
+    'site/fangdeng.js': () => code("// 中元放灯登记\n// 灯号：年份-放灯日期(农历月日)-当晚序号，例 2026-0714-03\nfunction lampNo(year, lunarMD, seq) {\n  return year + '-' + lunarMD + '-' + String(seq).padStart(2, '0');\n}\n\n// 灯签号由后台生成，短信发给登记人，也印在灯签上\n\n// 撤灯：只撤还没放的灯。已经放下水的灯，网上撤不了\nfunction canWithdraw(tagNo) {\n  const rec = findLamp(tagNo);\n  return rec && !rec.released;\n}\n\n// TODO: 灯主须为过世亲人，登记时加个确认\n"),
+    'site/index.html': () => code('<!doctype html>\n<html lang="zh-CN">\n<head>\n<meta charset="utf-8">\n<title>白鹭渡水府庙</title>\n</head>\n<body>\n<h1>白鹭渡水府庙</h1>\n<nav><a href="#zupu">许氏宗谱</a> · <a href="#fangdeng">中元放灯</a> · <a href="#minsu">民俗</a></nav>\n<main id="app"></main>\n<script src="zupu.js"><\/script>\n<script src="fangdeng.js"><\/script>\n</body>\n</html>\n'),
+    'site/minsu.md': () => md('<h1>白鹭渡取名旧俗</h1><p>白鹭渡人家添了伢子，先有小名，后有大名。大名按族谱字辈取，上谱，上户口。小名由外婆或奶奶取，只在屋里叫。</p><p><b>小名多取旱地上长的东西，麦、粟、豆、薯都有。</b>老人讲，渡口人家离水近，取个旱地的名字，水里认不得。</p><p><b>小名不落笔。</b>不上谱，不写在纸上，也不写在灯上。奶奶的说法是，写下来就叫得到了。</p><p>伢子吓着了，或者落水救上来不醒，屋里人夜里到渡口喊魂，喊的是小名。<b>一个人在前头喊，屋里人在后头跟一声。</b></p><p><b>七月里在河边，有人叫你大名，莫应。</b></p><p>整理：许禾　口述：周桂香、陈守义　2026年7月</p>'),
+    'site/zupu.js': () => code("// 族谱检索：只按大名查。乳名不录（见 docs/凡例.md）\nlet PEOPLE = [];\n\nfetch('zupu.json').then(r => r.json()).then(list => { PEOPLE = list; });\n\nfunction search(name) {\n  const q = name.trim();\n  return q ? PEOPLE.filter(p => p.name.includes(q)) : [];\n}\n")
+  };
+  const TREE = [['docs', 'dir'], ['lanterns', 'dir'], ['scans', 'dir'], ['site', 'dir'], ['README.md', 'file']];
+  const LAST = { docs: '90274e0', lanterns: 'c87a3ba', scans: '90274e0', site: '8281255', 'README.md': '8281255' };
+  function commit(sha) { return C.find(c => c[0] === sha); }
+  function syncBar() { return '<div class="sync">镜像，只读。上次从 GitHub 同步：2026-08-26 22:00。时间都按北京时间显示。</div>'; }
+  function repoHead(tab) {
+    return '<h1 class="repo-h"><img src="' + AV.xuhe06 + '" alt=""><a href="#/xuhe06">xuhe06</a> / <a href="#/' + REPO + '"><b>bailudu-zupu</b></a></h1><nav class="tabs"><a href="#/' + REPO + '" class="' + (tab === 'code' ? 'on' : '') + '">代码</a><a href="#/' + REPO + '/commits" class="' + (tab === 'commits' ? 'on' : '') + '">提交（' + C.length + '）</a></nav>' + syncBar();
+  }
+  function latest() { const c = C[0]; return '<div class="bh"><img src="' + AV[c[2]] + '" alt=""><b>' + c[2] + '</b><a href="#/' + REPO + '/commit/' + c[0] + '">' + esc(c[3]) + '</a><span class="muted">' + c[0] + ' · ' + c[1] + '</span></div>'; }
+  function repo() {
+    main.innerHTML = repoHead('code') + '<div class="box">' + latest() + TREE.map(f => {
+      const c = commit(LAST[f[0]]);
+      const href = f[1] === 'dir' ? '#/' + REPO + '/tree/' + f[0] : '#/' + REPO + '/blob/' + f[0];
+      return '<div class="frow"><span class="ic">' + (f[1] === 'dir' ? '📁' : '📄') + '</span><a class="nm" href="' + href + '">' + f[0] + '</a><span class="msg">' + esc(c[3]) + '</span><span class="tm">' + c[1].slice(0, 10) + '</span></div>';
+    }).join('') + '</div><div class="box"><div class="bh"><b>README.md</b></div>' + FILES['README.md']() + '</div>';
+    document.title = REPO + ' · 码仓';
+  }
+  function tree(dir) {
+    const files = Object.keys(FILES).filter(f => f.startsWith(dir + '/'));
+    main.innerHTML = repoHead('code') + '<div class="box"><div class="bh"><a href="#/' + REPO + '">bailudu-zupu</a> / <b>' + esc(dir) + '</b></div>' +
+      files.map(f => '<div class="frow"><span class="ic">📄</span><a class="nm" href="#/' + REPO + '/blob/' + f + '">' + esc(f.split('/')[1]) + '</a></div>').join('') + '</div>';
+  }
+  function blob(path) {
+    const render = FILES[path];
+    main.innerHTML = repoHead('code') + '<div class="box"><div class="bh"><a href="#/' + REPO + '">bailudu-zupu</a> / ' + esc(path) + (render ? '<a class="muted" href="#/' + REPO + '/commits">History</a>' : '') + '</div>' + (render ? render() : '<div class="md"><p>没有这个文件。</p></div>') + '</div>';
+  }
+  function commits() {
+    let day = '';
+    main.innerHTML = repoHead('commits') + C.map(c => {
+      const d = c[1].slice(0, 10);
+      const head = d !== day ? '<div class="day">提交于 ' + d + '</div>' : '';
+      day = d;
+      return head + '<div class="box" style="margin-bottom:6px"><div class="crow"><img src="' + AV[c[2]] + '" alt=""><div class="t"><a href="#/' + REPO + '/commit/' + c[0] + '">' + esc(c[3]) + '</a><div>' + c[2] + ' 提交于 ' + c[1] + '</div></div><a class="sha" href="#/' + REPO + '/commit/' + c[0] + '">' + c[0] + '</a></div></div>';
+    }).join('');
+    document.title = '提交 · ' + REPO;
+  }
+  function commitPage(sha) {
+    const c = commit(sha);
+    if (!c) return commits();
+    const no = lampOf(c);
+    let diff = '';
+    if (c[4] === 'add') diff = '<span class="add">+' + esc(lampLine(no, c[1].slice(0, 10))) + '</span>';
+    if (c[4] === 'del') diff = '<span class="del">-' + esc(lampLine(no, '2026-08-13')) + '</span>';
+    main.innerHTML = repoHead('commits') + '<div class="box"><div class="bh"><img src="' + AV[c[2]] + '" alt=""><b>' + esc(c[3]) + '</b></div><div class="md"><p>' + esc(c[5] || '（无说明）') + '</p><p style="color:#656d76">' + c[2] + ' 提交于 ' + c[1] + '　<span class="sha">' + c[0] + '</span></p></div></div>' +
+      (diff ? '<div class="box"><div class="bh"><b>lanterns/2026.csv</b></div><pre class="code">' + diff + '</pre></div>' : '');
+  }
+  function user(name) {
+    if (name === 'xuhe06') {
+      main.innerHTML = '<div class="user"><div class="l"><img src="' + AV.xuhe06 + '" alt="xuhe06 的头像" data-zoom><h2>许禾</h2><div class="lg">xuhe06</div><p>计算机系大二。暑假回奶奶家，把族谱一页页拍下来、敲进电脑。</p><p style="color:#656d76">白鹭渡</p></div><div class="r"><h3>仓库</h3>' +
+        '<div class="rcard"><a href="#/' + REPO + '"><b>bailudu-zupu</b></a><p>' + DESC + '</p></div></div></div>';
+      document.title = 'xuhe06 · 码仓';
+      return;
+    }
+    const other = { 'siyuan-c': 'lju-timetable', 'yiming-liu': 'power-alert', zhouke: 'booksxchg' }[name];
+    if (other) { main.innerHTML = '<h2>' + esc(name) + '</h2><div class="rcard"><b>' + other + '</b><p>同步中……</p></div>'; return; }
+    main.innerHTML = '<p>没有找到用户 ' + esc(name) + '。</p>';
+  }
+  function home() {
+    main.innerHTML = '<h2>码仓</h2><p>开源社成员仓库的 GitHub 镜像，每小时同步一次。按 GitHub 用户名或仓库名搜。</p><div class="box"><div class="bh"><b>最近同步</b></div>' +
+      [['siyuan-c', 'lju-timetable', '10 分钟前'], ['yiming-liu', 'power-alert', '1 小时前'], ['zhouke', 'booksxchg', '1 小时前']].map(r => '<div class="frow"><span class="ic">📦</span><a class="nm" href="#/' + r[0] + '">' + r[0] + '/' + r[1] + '</a><span class="msg"></span><span class="tm">' + r[2] + '</span></div>').join('') + '</div>';
+    document.title = '码仓 · LJU OSC 镜像';
+  }
+  function search(q) {
+    const k = XM.norm(q);
+    document.getElementById('q').value = q;
+    if (k.includes('xuhe06') && k.includes('bailudu')) return (location.hash = '#/' + REPO);
+    if (k === 'xuhe06') return user('xuhe06');
+    if (k.includes('bailudu')) { main.innerHTML = '<h2>搜索：' + esc(q) + '</h2><div class="rcard"><a href="#/' + REPO + '"><b>' + REPO + '</b></a><p>' + DESC + '</p></div>'; return; }
+    if (['siyuanc', 'yimingliu', 'zhouke'].includes(k)) return user({ siyuanc: 'siyuan-c', yimingliu: 'yiming-liu', zhouke: 'zhouke' }[k]);
+    main.innerHTML = '<h2>搜索：' + esc(q) + '</h2><p>没有找到。用户名要写全，比如 siyuan-c。</p>';
+  }
+  document.getElementById('sf').addEventListener('submit', e => { e.preventDefault(); location.hash = '#/search/' + encodeURIComponent(document.getElementById('q').value.trim()); });
+  XM.route([
+    [/^\/$/, home],
+    [/^\/search\/(.*)$/, search],
+    [/^\/xuhe06\/bailudu-zupu$/, repo],
+    [/^\/xuhe06\/bailudu-zupu\/commits$/, commits],
+    [/^\/xuhe06\/bailudu-zupu\/commit\/(\w+)$/, commitPage],
+    [/^\/xuhe06\/bailudu-zupu\/tree\/(\w+)$/, tree],
+    [/^\/xuhe06\/bailudu-zupu\/blob\/(.+)$/, blob],
+    [/^\/([\w-]+)$/, user]
+  ], home);
+})();
+</script>
+</body>
+</html>

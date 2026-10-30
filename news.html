@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>宁川融媒</title>
+<link rel="stylesheet" href="css/common.css">
+<style>
+body { background: #fff; color: #1f1f1f; font-family: "Microsoft YaHei", "PingFang SC", sans-serif; }
+.nw-top { border-bottom: 3px solid #1757a6; }
+.nw-top .in { max-width: 1000px; margin: 0 auto; padding: 14px 16px 8px; display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.nw-logo { color: #1757a6; font-size: 30px; font-weight: 800; letter-spacing: 2px; text-decoration: none; }
+.nw-logo small { display: block; font-size: 12px; color: #888; letter-spacing: 0; font-weight: 400; }
+.nw-search { display: flex; }
+.nw-search input { border: 1px solid #1757a6; padding: 6px 10px; width: 220px; }
+.nw-search button { background: #1757a6; color: #fff; border: 0; padding: 0 14px; cursor: pointer; }
+.nw-nav { background: #1757a6; }
+.nw-nav .in { max-width: 1000px; margin: 0 auto; display: flex; flex-wrap: wrap; }
+.nw-nav a { color: #fff; text-decoration: none; padding: 8px 14px; font-size: 15px; }
+.nw-wrap { max-width: 1000px; margin: 18px auto 40px; padding: 0 16px; display: flex; gap: 24px; }
+.nw-main { flex: 1; min-width: 0; }
+.nw-side { width: 260px; flex: none; }
+.flash { background: #fff4f4; border-left: 4px solid #d32f2f; padding: 10px 14px; margin-bottom: 18px; }
+.flash b { color: #d32f2f; margin-right: 8px; }
+.flash a { color: #222; }
+.head-news { display: flex; gap: 16px; margin-bottom: 18px; }
+.head-news img { width: 300px; height: 190px; object-fit: cover; }
+.head-news h2 { margin: 0 0 8px; font-size: 21px; }
+.head-news h2 a { color: #111; text-decoration: none; }
+.list-item { padding: 10px 0; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; gap: 10px; }
+.list-item a { color: #222; text-decoration: none; }
+.list-item a:hover { color: #1757a6; text-decoration: underline; }
+.list-item span { color: #999; font-size: 13px; flex: none; }
+.side-box { border: 1px solid #e6e6e6; margin-bottom: 14px; }
+.side-box h3 { margin: 0; background: #f4f7fb; font-size: 15px; padding: 8px 12px; border-bottom: 1px solid #e6e6e6; }
+.side-box ol { margin: 8px 0; padding-left: 30px; font-size: 14px; }
+.side-box li { margin: 6px 0; }
+.article h1 { font-size: 26px; margin: 0 0 10px; line-height: 1.4; }
+.article .src { color: #888; font-size: 13px; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 16px; }
+.article p { font-size: 16px; line-height: 1.95; margin: 0 0 14px; text-indent: 2em; }
+.article figure { margin: 18px 0; text-align: center; }
+.article figure img { max-width: 100%; cursor: zoom-in; }
+.article figcaption { font-size: 13px; color: #666; margin-top: 6px; }
+.editor { color: #999; font-size: 13px; text-align: right; }
+footer { background: #f4f7fb; text-align: center; font-size: 12px; color: #888; padding: 18px 10px 30px; line-height: 1.8; }
+@media (max-width: 760px) { .nw-side { display: none; } .head-news { flex-direction: column; } .head-news img { width: 100%; } }
+</style>
+</head>
+<body>
+<header class="nw-top"><div class="in"><a class="nw-logo" href="#/">宁川融媒<small>宁川县融媒体中心</small></a><form class="nw-search" id="sf"><input id="q" placeholder="搜索新闻" aria-label="搜索新闻"><button type="submit">搜索</button></form></div></header>
+<nav class="nw-nav"><div class="in"><a href="#/">首页</a><a href="#/">本地要闻</a><a href="#/">乡镇动态</a><a href="#/">民生</a><a href="#/">应急</a><a href="#/">文旅</a></div></nav>
+<div class="nw-wrap"><main class="nw-main" id="main"></main><aside class="nw-side" id="side"></aside></div>
+<footer>宁川县融媒体中心 主办　新闻热线见报社公告<br>本站内容为虚构作品《小名》的一部分，人物、机构与事件均为虚构</footer>
+<script src="js/lunar-data.js"></script>
+<script src="js/core.js"></script>
+<script>
+(function () {
+  const esc = XM.esc;
+  const main = document.getElementById('main');
+  const side = document.getElementById('side');
+  const A = [
+    { id: '20260826', date: '2026-08-26 07:05', title: '白鹭渡一女大学生夜间失联 救援队连夜沿河搜寻', img: 'assets/img/news-2026.jpg', cap: '8月25日夜，救援队员在白鹭渡渡口下游搜寻。（宁川县民间应急救援队供图）', author: '记者 周敏',
+      body: ['8月25日晚，白鹭渡村一名20岁女大学生在出门后失联。家属称，她晚上九点多出门，说要去渡口放东西，此后联系不上。当晚，村民在渡口台阶上捡到其手机。', '接到求助后，宁川县民间应急救援队连夜赶到现场，组织船只在渡口及下游河段搜寻，26日凌晨5时恢复搜索，并使用无人机航拍。', '救援队提醒，近期上游降雨，宁川河白鹭渡段水位上涨、流速较快，请沿河群众注意安全，发现线索及时与家属或救援队联系。', '目前搜寻仍在进行中，本台将持续关注。'] },
+    { id: '20260805', date: '2026-08-05 16:20', title: '白鹭渡水府庙中元放灯今年可网上登记', author: '通讯员 王立',
+      body: ['记者从白鹭渡村了解到，今年农历七月半，白鹭渡水府庙的传统放灯活动开通了网上登记。村民可通过水府庙网站登记灯主大名和生辰，由庙里统一制灯、统一放灯。', '据水府庙管事陈守义介绍，网站由在外读大学的本村学生许禾利用暑假义务搭建，同时还在帮宗亲会整理族谱电子版。“老人家不会弄的，来庙里我帮他登。”', '中元放灯是白鹭渡一带的老习俗。按当地讲究，[[灯上只写大名，不写小名]]。'] },
+    { id: '20260720', date: '2026-07-20 09:00', title: '我县启动汛期防溺水专项行动', author: '记者 周敏', body: ['近日，我县启动汛期防溺水专项行动，在重点水域增设警示牌和救生设备。'] },
+    { id: '20260703', date: '2026-07-03 10:30', title: '县人民医院新院区预计九月启用', author: '记者 李响', body: ['县人民医院新院区主体工程已完工，预计九月启用，老院区门诊将逐步迁移。'] },
+    { id: '20250907', date: '2025-09-07 08:40', title: '白鹭渡渡口一少年中元夜溺亡', img: 'assets/img/news-2025.jpg', cap: '9月6日夜，白鹭渡渡口台阶。（宁川融媒 资料图）', author: '记者 周敏', tags: ['许平', '平平'],
+      body: ['[[9月6日晚]]，白鹭渡村渡口发生一起溺水事件，一名15岁少年许某落水，经救援队搜寻打捞，确认已无生命体征。', '据村民介绍，当天是[[许某15周岁（公历）生日]]，又逢农历七月十五，家人带他到渡口放灯庆生。晚上十点左右，有人听见河边有人喊他，随后他在台阶附近落水。事发时，少年的堂姐也在渡口。', '事发后，家属按当地习俗在渡口连声呼喊少年小名，未果。据了解，[[当晚少年的生日灯上写的就是他的小名]]。', '7日早上，记者在[[许某的鹅聊空间]]看到，同学前一天给他留的生日祝福还在。', { img: 'assets/img/news-2025-space.jpg', cap: '许某的鹅聊空间。（网络截图，隐私信息已作处理）' }, '县应急管理局提醒，夜间请勿在河边逗留，家长务必看护好孩子。'] },
+    { id: '20250820', date: '2025-08-20 15:10', title: '白鹭渡至县城公路完成路面修补', author: '通讯员 王立', body: ['白鹭渡至县城公路破损路段已完成修补，恢复双向通行。'] }
+  ];
+  const fig = (src, cap) => '<figure><img src="' + src + '" alt="' + esc(cap) + '" data-zoom><figcaption>' + esc(cap) + '</figcaption></figure>';
+  const text = a => a.body.filter(p => typeof p === 'string').join('');
+  function sideHtml() {
+    // Last year's report is only reachable through search.
+    side.innerHTML = '<div class="side-box"><h3>热点排行</h3><ol>' + A.filter(a => a.date >= '2026').map(a => '<li><a href="#/a/' + a.id + '">' + esc(a.title) + '</a></li>').join('') + '</ol></div>' +
+      '<div class="side-box"><h3>便民</h3><ol><li><a href="rescue.html#/" target="_blank" rel="noopener">宁川县民间应急救援队</a></li><li><a href="miao.html#/" target="_blank" rel="noopener">白鹭渡水府庙</a></li></ol></div>';
+  }
+  function home() {
+    const top = A[0];
+    main.innerHTML = '<div class="flash"><b>快讯</b><a href="#/a/' + top.id + '">' + esc(top.title) + '</a></div>' +
+      '<div class="head-news"><img src="' + top.img + '" alt="" data-zoom><div><h2><a href="#/a/' + top.id + '">' + esc(top.title) + '</a></h2><p style="color:#555;font-size:14px">' + esc(XM.plain(top.body[0]).slice(0, 70)) + '……</p></div></div>' +
+      A.slice(1).filter(a => a.date >= '2026').map(a => '<div class="list-item"><a href="#/a/' + a.id + '">' + esc(a.title) + '</a><span>' + a.date.slice(5, 10) + '</span></div>').join('') +
+      '<p style="font-size:13px;color:#999;margin-top:14px">往期新闻请使用搜索。</p>';
+    sideHtml();
+    document.title = '宁川融媒';
+  }
+  function search(q) {
+    const kw = decodeURIComponent(q || '').trim();
+    document.getElementById('q').value = kw;
+    const parts = kw.split(/\s+/).filter(Boolean).map(XM.norm);
+    const hits = !parts.length ? [] : A.filter(a => parts.every(p => XM.norm(XM.plain(a.title + text(a) + (a.tags || []).join(' '))).includes(p)));
+    main.innerHTML = '<h2 style="font-size:18px">搜索“' + esc(kw) + '”，共 ' + hits.length + ' 条</h2>' +
+      (hits.length ? hits.map(a => '<div class="list-item"><a href="#/a/' + a.id + '">' + esc(a.title) + '</a><span>' + a.date.slice(0, 10) + '</span></div>').join('') : '<p>没有找到相关新闻。</p>');
+    sideHtml();
+  }
+  function article(id) {
+    const a = A.find(x => x.id === id);
+    if (!a) return home();
+    main.innerHTML = '<div class="article"><h1>' + esc(a.title) + '</h1><div class="src">' + esc(a.date) + '　来源：宁川融媒　' + esc(a.author) + '</div>' +
+      (a.img ? fig(a.img, a.cap) : '') +
+      a.body.map(p => typeof p === 'string' ? '<p>' + XM.rich(p) + '</p>' : fig(p.img, p.cap)).join('') + '<div class="editor">责任编辑：陈思</div></div>';
+    sideHtml();
+    document.title = a.title + ' - 宁川融媒';
+  }
+  document.getElementById('sf').addEventListener('submit', e => { e.preventDefault(); location.hash = '#/s/' + encodeURIComponent(document.getElementById('q').value.trim()); });
+  XM.route([[/^\/$/, home], [/^\/s\/(.*)$/, search], [/^\/a\/(\d+)$/, article]], home);
+})();
+</script>
+</body>
+</html>

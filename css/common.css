@@ -1,0 +1,15 @@
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; font-family: -apple-system, "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif; line-height: 1.6; }
+img { max-width: 100%; }
+button, input, select, textarea { font: inherit; }
+a { color: inherit; }
+.xm-preview-banner { position: sticky; top: 0; z-index: 999; background: #fff3c4; color: #6b4e00; font-size: 12px; padding: 4px 10px; text-align: center; border-bottom: 1px solid #e6cf7a; }
+.xm-toast { position: fixed; left: 50%; bottom: 40px; transform: translate(-50%, 20px); background: rgba(20, 20, 20, .86); color: #fff; padding: 8px 16px; border-radius: 6px; font-size: 14px; opacity: 0; transition: .25s; pointer-events: none; z-index: 1000; max-width: 86vw; }
+.xm-toast.show { opacity: 1; transform: translate(-50%, 0); }
+.xm-lightbox { position: fixed; inset: 0; background: rgba(0, 0, 0, .9); display: flex; align-items: center; justify-content: center; z-index: 990; flex-direction: column; gap: 10px; }
+.xm-lightbox img { max-width: 94vw; max-height: 84vh; object-fit: contain; cursor: zoom-in; transition: transform .2s; }
+.xm-lightbox img.zoomed { transform: scale(2); cursor: zoom-out; }
+.xm-lightbox .cap { color: #ccc; font-size: 13px; }
+.xm-lightbox button { position: absolute; top: 14px; right: 18px; background: none; border: 0; color: #fff; font-size: 30px; cursor: pointer; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }

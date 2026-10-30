@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>宁川县民间应急救援队</title>
+<link rel="stylesheet" href="css/common.css">
+<style>
+body { background: #f4f5f7; color: #222; }
+.rs-top { background: #c62828; color: #fff; }
+.rs-top .in { max-width: 960px; margin: 0 auto; padding: 14px 16px; display: flex; align-items: center; gap: 14px; }
+.rs-top .logo { width: 44px; height: 44px; border-radius: 50%; background: #fff; color: #c62828; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 22px; }
+.rs-top h1 { margin: 0; font-size: 20px; }
+.rs-top small { opacity: .8; }
+.rs-nav { background: #a61f1f; }
+.rs-nav .in { max-width: 960px; margin: 0 auto; display: flex; padding: 0 8px; }
+.rs-nav a { color: #fff; text-decoration: none; padding: 10px 14px; font-size: 14px; }
+.rs-nav a:hover, .rs-nav a.on { background: rgba(255, 255, 255, .15); }
+.rs-wrap { max-width: 960px; margin: 18px auto 40px; padding: 0 16px; }
+.box { background: #fff; border-radius: 6px; padding: 18px 20px; margin-bottom: 14px; box-shadow: 0 1px 2px rgba(0, 0, 0, .05); }
+.box h2 { margin: 0 0 10px; font-size: 18px; border-left: 4px solid #c62828; padding-left: 10px; }
+.box p { margin: 6px 0; font-size: 14px; color: #444; }
+.query { display: flex; gap: 8px; margin: 12px 0; }
+.query input { flex: 1; padding: 9px 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 15px; }
+.query button { background: #c62828; color: #fff; border: 0; border-radius: 4px; padding: 0 20px; cursor: pointer; }
+.msg { font-size: 14px; color: #c62828; min-height: 20px; }
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; text-align: center; }
+.stats div { background: #fafafa; border-radius: 6px; padding: 12px; }
+.stats b { display: block; font-size: 24px; color: #c62828; }
+table.log { width: 100%; border-collapse: collapse; font-size: 14px; }
+table.log td { border-bottom: 1px solid #eee; padding: 8px 6px; vertical-align: top; }
+table.log td.t { width: 110px; color: #666; font-family: Consolas, monospace; }
+.meta { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px 20px; font-size: 14px; }
+.meta span { color: #888; }
+.drone img { width: 100%; max-width: 640px; display: block; margin-top: 8px; cursor: zoom-in; }
+.news-item { padding: 8px 0; border-bottom: 1px dashed #ddd; font-size: 14px; }
+.news-item span { color: #999; margin-right: 10px; font-family: Consolas, monospace; }
+footer { text-align: center; font-size: 12px; color: #999; padding: 10px 0 30px; }
+</style>
+</head>
+<body>
+<header class="rs-top"><div class="in"><div class="logo">救</div><div><h1>宁川县民间应急救援队</h1><small>公益 · 志愿 · 24小时求助热线（见队员手册）</small></div></div></header>
+<nav class="rs-nav"><div class="in"><a href="#/">首页</a><a href="#/query">求助登记查询</a><a href="#/about">队伍介绍</a><a href="#/join">志愿者招募</a></div></nav>
+<main class="rs-wrap" id="main"></main>
+<footer>宁川县民间应急救援队 · 本站内容为虚构作品《小名》的一部分</footer>
+<script src="js/lunar-data.js"></script>
+<script src="js/core.js"></script>
+<script>
+(function () {
+  const main = document.getElementById('main');
+  const esc = XM.esc;
+  let shownOut = null;
+  const LOG = [
+    ['8/25 22:45', '家属（许秀芝）电话求助：侄女许禾，20岁，21:10左右出门，说去渡口放东西，未归，电话不通。'],
+    ['22:55', '家属许建国组织村民沿河喊人。'],
+    ['23:10', '[[晒谷场正对的河心]]传来一声回应（女声，类似“哎”），随后无声。下游K9钓鱼人也听到。'],
+    ['23:20', '队员2人到场。'],
+    ['23:35', '村民在[[渡口第七级台阶]]上捡到手机，屏幕朝下，电量41%。'],
+    ['23:50', '两条船下水，搜索K5–K9段。水流较急，能见度差。'],
+    ['8/26 01:50', '家属许建国一人在渡口台阶上呼喊，称又听到回应。在场队员未听到。'],
+    ['02:10', '暂停水面搜索，岸上留人。'],
+    ['05:00', '恢复搜索。无人机航拍K1–K12段。'],
+    ['06:21', '航拍：K7段芦苇边有一盏纸灯，逆着水流停在原处，未随水漂走（当时流速约0.6米/秒）。原因不明，已标记。'],
+    ['06:40', '队员划船靠近查看：纸灯底下拴着水府庙的灯签，灯签号后四位被水泡糊了。灯没动，拍照留存。'],
+    ['07:30', '继续搜索中。']
+  ];
+  function home() {
+    main.innerHTML = '<div class="box"><h2>求助登记查询</h2><p>家属可凭登记号查询搜救进展。登记号由队里统一编号：<b>BLD-月日-姓名拼音</b>，月日按<b>农历</b>（队里老规矩，老人家记农历），后面跟求助对象的姓名拼音。例：农历六月十四登记、求助对象王小军，登记号为 BLD-0614-WANGXIAOJUN。</p><p><a href="#/query">去查询 →</a></p></div>' +
+      '<div class="box"><h2>队伍动态</h2>' +
+      [['2026-08-26', '白鹭渡渡口搜救进行中，请沿河村民提供线索'], ['2026-08-05', '暑期防溺水宣讲走进白鹭渡小学'], ['2026-07-20', '汛期值守表已更新'], ['2025-09-07', '白鹭渡渡口溺水事件处置完毕（宁川融媒有报道）']].map(n => '<div class="news-item"><span>' + n[0] + '</span>' + esc(n[1]) + '</div>').join('') + '</div>' +
+      '<div class="box"><h2>2026年数据</h2><div class="stats"><div><b>37</b>出勤次数</div><div><b>112</b>注册队员</div><div><b>9</b>水域搜救</div></div></div>';
+  }
+  function query() {
+    main.innerHTML = '<div class="box"><h2>求助登记查询</h2><p>请输入登记号。登记号格式：BLD-农历月日-姓名拼音，例如 BLD-0614-WANGXIAOJUN。</p><div class="query"><input id="no" placeholder="BLD-" aria-label="登记号"><button type="button" id="go">查询</button></div><div class="msg" id="msg"></div></div>';
+    const go = () => {
+      const v = XM.norm(document.getElementById('no').value).replace(/^bld/, '');
+      const msg = document.getElementById('msg');
+      if (v === '0713xuhe') { XM.set('rescue:0713'); location.hash = '#/log/BLD-0713-XUHE'; return; }
+      if (v === '0713') { msg.textContent = '登记号不全：月日后面还要加求助对象的姓名拼音。'; return; }
+      if (/^0?825/.test(v)) { msg.textContent = '未找到。登记号按农历月日编号，不是公历。'; return; }
+      msg.textContent = /^\d{4}[a-z]*$/.test(v) ? '未找到该登记号的求助记录。' : '登记号格式不对，例：BLD-0614-WANGXIAOJUN';
+    };
+    document.getElementById('go').addEventListener('click', go);
+    document.getElementById('no').addEventListener('keydown', e => { if (e.key === 'Enter') go(); });
+  }
+  function log() {
+    if (!(XM.preview || XM.flag('rescue:0713'))) { location.hash = '#/query'; return; }
+    XM.set('rescueLogOpened');
+    const out = XM.flag('lanternWithdrawn') || XM.flag('slipWrong');
+    shownOut = out;
+    const rows = out ? LOG.concat([['23:06', 'K7段芦苇边那盏纸灯灭了，接着顺水漂走，没再找到。值守队员夜间补拍一张。']]) : LOG;
+    main.innerHTML = XM.previewBanner() + '<div class="box"><h2>BLD-0713-XUHE　搜救记录</h2><div class="meta"><div><span>求助对象：</span>许禾，女，20岁</div><div><span>地点：</span>白鹭渡渡口及下游河段</div><div><span>登记：</span>农历七月十三（公历8月25日）</div><div><span>状态：</span>搜索中</div></div></div>' +
+      '<div class="box"><h2>时间线</h2><table class="log">' + rows.map(r => '<tr><td class="t">' + esc(r[0]) + '</td><td>' + XM.rich(r[1]) + '</td></tr>').join('') + '</table>' +
+      '<p style="color:#888;font-size:13px">备注：<b>该河段2025年中元曾发生溺亡事件，宁川融媒有报道</b>。家属情绪激动，请队员注意沟通。另：渡口老人反映，夜里看水面“<b>倒影里看见灯在岸上</b>”，记录备查。</p></div>' +
+      '<div class="box drone"><h2>航拍照片</h2><p>河段编号沿河里程石从K1到K12。输入河段编号查看该段照片。</p><div class="query"><input id="seg" placeholder="例如 K3" aria-label="河段编号"><button type="button" id="see">查看</button></div><div id="pic"></div></div>';
+    const see = () => {
+      const v = XM.norm(document.getElementById('seg').value).replace(/^k/, '');
+      const pic = document.getElementById('pic');
+      const n = Number(v);
+      if (!(n >= 1 && n <= 12)) { pic.innerHTML = '<p class="msg">没有这个河段，河段从K1到K12。</p>'; return; }
+      if (n === 7) {
+        XM.set('droneSeen');
+        pic.innerHTML = '<p>K7段，06:21，标记照片：</p><img src="assets/img/drone-k7.jpg" alt="K7段航拍：芦苇边一盏纸灯" data-zoom>' +
+          '<p>06:40，队员划船近拍的灯签：</p><img src="assets/img/k7-tag.jpg" alt="纸灯底下拴着的灯签" data-zoom>' +
+          (out ? '<p>K7段，23:08，夜间补拍：</p><img src="assets/img/drone-k7-night.jpg" alt="K7段夜间航拍：灯不见了" data-zoom>' : '');
+        return;
+      }
+      pic.innerHTML = '<p>K' + n + '段共' + (8 + (n * 3) % 7) + '张照片，未见异常。</p>';
+    };
+    document.getElementById('see').addEventListener('click', see);
+    document.getElementById('seg').addEventListener('keydown', e => { if (e.key === 'Enter') see(); });
+  }
+  function about() {
+    main.innerHTML = '<div class="box"><h2>队伍介绍</h2><p>宁川县民间应急救援队成立于2016年，是县民政部门登记的公益组织，主要承担水域搜救、山地搜救和防溺水宣讲。现有注册队员112人，船艇3艘，无人机2架。</p><p>队长：夏雨。白鹭渡联络点设在渡口小卖部。</p></div>';
+  }
+  function join() {
+    main.innerHTML = '<div class="box"><h2>志愿者招募</h2><p>年满18周岁、身体健康、会游泳者优先。每月第二个周六集中训练。报名请到联络点填表。</p></div>';
+  }
+  XM.onChange(() => { if (/^#\/log\//i.test(location.hash) && (XM.flag('lanternWithdrawn') || XM.flag('slipWrong')) !== shownOut) log(); });
+  XM.route([[/^\/$/, home], [/^\/query$/, query], [/^\/log\/BLD-0713-XUHE$/i, log], [/^\/about$/, about], [/^\/join$/, join]], home);
+})();
+</script>
+</body>
+</html>
