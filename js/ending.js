@@ -106,13 +106,17 @@
   } else if (kind === 'ne' && !locked) {
     links = '<button type="button" class="main" data-go="phone.html#/' + (flags.chenAdded ? 'chat/chenbo' : 'add') + '">去找陈伯</button>' + replay.replace(' class="main"', '') + phone + again;
   }
+  // Only TE says 许禾 made it home, so only TE points to the next game.
+  const tease = kind !== 'te' ? '' :
+    '<div class="tease"><p class="k">新作预告</p><p class="line">这个夏天的事讲完了，<br>但许禾的故事还在继续。</p>' +
+    '<a href="next.html" target="_blank" rel="noopener">看看许禾后来怎么样了 →</a></div>';
 
   document.title = '河灯秘事 · ' + e.title;
   box.innerHTML = XM.previewBanner('结局 ' + (forced || kind)) +
     '<div class="tag">《河灯秘事》　' + esc(e.tag) + '</div><h1>' + esc(e.title) + '</h1>' +
     e.body.map(p => '<p>' + esc(p) + '</p>').join('') +
     (e.note ? '<p class="note">（' + esc(e.note) + '）</p>' : '') +
-    '<div class="links">' + links + '</div>';
+    '<div class="links">' + links + '</div>' + tease;
   box.classList.add('in');
 
   box.querySelectorAll('[data-go]').forEach(b => b.addEventListener('click', () => {

@@ -13,11 +13,19 @@ body.end-body { margin: 0; min-height: 100vh; background: radial-gradient(ellips
 .end .links .main { border-color: #4f7d86; color: #fff; background: #13211f; }
 .end .links a:hover, .end .links button:hover { background: #172328; }
 .end .links #again { color: #8c979b; }
+/* 真结局最底下的新作预告，用新作开场页的米白和褐黄，和上面的按钮分开 */
+.end .tease { margin-top: 64px; padding-top: 34px; border-top: 1px solid #1f2b2f; text-align: center; font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; }
+.end .tease p { text-indent: 0; text-align: center; }
+.end .tease .k { margin: 0 0 8px; color: #a99c80; font-size: 12px; line-height: 1.6; letter-spacing: 6px; text-indent: 6px; }
+.end .tease .line { margin: 0 0 22px; font: 19px/1.9 "Kaiti SC", "STKaiti", "KaiTi", serif; color: #e7e3da; letter-spacing: 1px; }
+.end .tease a { display: inline-block; padding: 11px 26px; border: 1px solid rgba(184, 163, 122, .55); border-radius: 6px; background: rgba(184, 163, 122, .08); color: #efe6d2; font-size: 15px; letter-spacing: 1px; text-decoration: none; transition: background .3s, box-shadow .3s; }
+.end .tease a:hover, .end .tease a:focus-visible { background: rgba(184, 163, 122, .16); box-shadow: 0 0 24px rgba(184, 163, 122, .16); outline: none; }
 @keyframes end-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 @media (max-width: 600px) {
   .end { padding: 56px 20px 72px; }
   .end .xm-preview-banner { margin: -36px -20px 28px; }
   .end h1 { font-size: 34px; letter-spacing: 10px; margin-bottom: 32px; }
   .end p { font-size: 16px; line-height: 2; }
+  .end .tease .line { font-size: 18px; }
 }
 @media (prefers-reduced-motion: reduce) { .end.in { animation: none; opacity: 1; } }

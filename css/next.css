@@ -1,0 +1,39 @@
+/* 新作预告：照《重勘：柳林雨夜旧案》开场页的样子，深底、米白字、一条晚报剪报 */
+html { background: #14161a; }
+body.next-body { min-height: 100vh; background: #14161a; color: #e7e3da; }
+.next { max-width: 620px; margin: 0 auto; padding: 28px 24px 48px; animation: next-in 1s ease .1s both; }
+.next p { margin: 0 0 12px; line-height: 1.95; }
+.next .maker { display: flex; align-items: center; gap: 10px; margin: 0 0 7vh; color: #9a958a; font-size: 14px; letter-spacing: 2px; }
+.next .maker img { width: 32px; height: 32px; border-radius: 50%; border: 1px solid rgba(231, 227, 218, .3); }
+.next .kicker { margin: 0 0 6px; color: #b08a5a; font-size: 13px; letter-spacing: 6px; }
+.next h1 { margin: 0; font-family: KaiTi, STKaiti, 楷体, serif; font-weight: 400; font-size: 44px; letter-spacing: 6px; white-space: nowrap; }
+.next .sub { margin: 2px 0 28px; color: #9a958a; letter-spacing: 2px; }
+.next .clip { margin: 0 0 16px; padding: 12px 16px 14px; border-left: 3px solid #b8a37a; background: rgba(255, 255, 255, .06); }
+.next .clip-src { margin-bottom: 4px; font-size: 12px; color: #a99c80; letter-spacing: 1px; }
+.next .clip-h { display: block; margin-bottom: 6px; font-size: 17px; color: #efe6d2; }
+.next .clip p { margin: 0; font-size: 14px; line-height: 1.85; color: #cfc8b8; }
+.next .gap { margin: 6px 0 14px; color: #a99c80; letter-spacing: 4px; }
+/* 开场页这里是“打开电脑”按钮；上线前是一个点不了的框 */
+.next .soon { display: inline-block; margin: 16px 0 0; padding: 10px 26px 10px 32px; border: 1px solid #6f6b62; border-radius: 6px; line-height: 1.6; letter-spacing: 6px; }
+.next .follow { display: flex; align-items: center; gap: 18px; margin: 30px 0 0; padding: 16px; border-radius: 6px; background: rgba(255, 255, 255, .04); }
+.next .follow .qr { flex: none; display: block; width: 104px; height: 104px; padding: 6px; background: #fff; border-radius: 6px; box-sizing: content-box; }
+.next .follow .who { min-width: 0; font-size: 14px; color: #9a958a; }
+.next .follow p { margin: 0; line-height: 1.8; }
+.next .follow .by { color: #efe6d2; font-size: 15px; }
+.next .follow .id { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; margin-top: 8px; }
+.next .follow #xhsId { color: #e7e3da; font-family: Consolas, Menlo, monospace; letter-spacing: 1px; -webkit-user-select: all; user-select: all; }
+.next .follow button { padding: 2px 12px; border: 1px solid #6f6b62; border-radius: 4px; background: transparent; color: #e7e3da; font-size: 13px; letter-spacing: 2px; cursor: pointer; }
+.next .follow button:hover { border-color: #e7e3da; }
+.next .links { margin: 22px 0 8px; font-size: 13px; }
+.next .links a { color: #b08a5a; text-decoration: none; border-bottom: 1px solid rgba(176, 138, 90, .4); }
+.next .links a:hover { color: #d9b07a; border-bottom-color: #d9b07a; }
+.next .fine { color: #6f6b62; font-size: 12px; line-height: 1.8; }
+@keyframes next-in { from { opacity: 0; } to { opacity: 1; } }
+@media (max-width: 560px) {
+  .next h1 { font-size: 34px; letter-spacing: 3px; white-space: normal; }
+}
+@media (max-width: 420px) {
+  .next .follow { gap: 14px; padding: 14px; }
+  .next .follow .qr { width: 88px; height: 88px; }
+}
+@media (prefers-reduced-motion: reduce) { .next { animation: none; } }
