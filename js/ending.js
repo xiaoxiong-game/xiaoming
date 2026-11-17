@@ -109,7 +109,7 @@
   // Only TE says 许禾 made it home, so only TE points to the next game.
   const tease = kind !== 'te' ? '' :
     '<div class="tease"><p class="k">新作预告</p><p class="line">这个夏天的事讲完了，<br>但许禾的故事还在继续。</p>' +
-    '<a href="next.html" target="_blank" rel="noopener">看看许禾后来怎么样了 →</a></div>';
+    '<a href="https://xiaoxiong-game.github.io/liulin/" target="_blank" rel="noopener">看看许禾后来怎么样了 →</a></div>';
 
   document.title = '河灯秘事 · ' + e.title;
   box.innerHTML = XM.previewBanner('结局 ' + (forced || kind)) +
