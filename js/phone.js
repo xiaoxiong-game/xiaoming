@@ -340,12 +340,30 @@
     });
     document.getElementById('seeEnding').addEventListener('click', () => { location.href = 'ending.html'; });
   }
+  // On a short window the call scrolls inside the phone (see .call in phone.css). Every click redraws it, so the
+  // player's place is kept while they stay on the same step; when new controls come up, it scrolls just far enough to show them.
+  let drawnStep = null;
   function renderCall() {
+    const old = app.querySelector('.call');
+    const keep = old && drawnStep === call.step ? old.scrollTop : null;
     const log = call.log.map(([c, t]) => '<p class="' + c + '">' + esc(t) + '</p>').join('');
     view('<div class="call"><div class="call-view"><span class="label">外婆 · 白鹭渡渡口</span><div class="steps"></div><div class="lamp"></div><div class="self"></div></div><div class="call-log" id="calllog">' + log + '</div><div class="call-ctl" id="ctl">' + controls() + '</div></div>', true);
     const cl = document.getElementById('calllog');
     cl.scrollTop = cl.scrollHeight;
+    const box = app.querySelector('.call');
+    if (keep !== null) box.scrollTop = keep;
+    else showControls(box);
+    drawnStep = call.step;
     wireCall();
+  }
+  function showControls(box) {
+    const ctl = document.getElementById('ctl');
+    if (!box || !ctl || box.scrollHeight <= box.clientHeight) return;
+    const b = box.getBoundingClientRect(), c = ctl.getBoundingClientRect();
+    if (c.bottom <= b.bottom + 1) return;
+    // Controls taller than the box start at its top (the pad reads top to bottom); shorter ones sit on its bottom edge,
+    // right under the newest lines of the talk.
+    box.scrollTop += c.height > box.clientHeight ? c.top - b.top : c.bottom - b.bottom;
   }
   function opt(label, act) { return '<button type="button" data-act="' + act + '">' + esc(label) + '</button>'; }
   // The withdrawal slip 小姨 writes on while you tell her what goes on it.
