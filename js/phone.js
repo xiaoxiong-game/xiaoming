@@ -342,18 +342,20 @@
   }
   // On a short window the call scrolls inside the phone (see .call in phone.css). Every click redraws it, so the
   // player's place is kept while they stay on the same step; when new controls come up, it scrolls just far enough to show them.
-  let drawnStep = null;
+  let drawnStep = null, drawnLines = 0;
   function renderCall() {
     const old = app.querySelector('.call');
     const keep = old && drawnStep === call.step ? old.scrollTop : null;
+    const said = call.log.length > drawnLines;
     const log = call.log.map(([c, t]) => '<p class="' + c + '">' + esc(t) + '</p>').join('');
     view('<div class="call"><div class="call-view"><span class="label">外婆 · 白鹭渡渡口</span><div class="steps"></div><div class="lamp"></div><div class="self"></div></div><div class="call-log" id="calllog">' + log + '</div><div class="call-ctl" id="ctl">' + controls() + '</div></div>', true);
     const cl = document.getElementById('calllog');
     cl.scrollTop = cl.scrollHeight;
     const box = app.querySelector('.call');
-    if (keep !== null) box.scrollTop = keep;
+    if (keep !== null) { box.scrollTop = keep; if (said) showNewest(box); }
     else showControls(box);
     drawnStep = call.step;
+    drawnLines = call.log.length;
     wireCall();
   }
   function showControls(box) {
@@ -364,6 +366,16 @@
     // Controls taller than the box start at its top (the pad reads top to bottom); shorter ones sit on its bottom edge,
     // right under the newest lines of the talk.
     box.scrollTop += c.height > box.clientHeight ? c.top - b.top : c.bottom - b.bottom;
+  }
+  // Same step, new words (外婆 answering a wrong name on the pad): if the talk has scrolled out of sight above the
+  // controls, bring it back to the top of the box, with the start of the controls right under it.
+  function showNewest(box) {
+    const cl = document.getElementById('calllog'), last = cl && cl.lastElementChild;
+    if (!last) return;
+    const b = box.getBoundingClientRect(), l = cl.getBoundingClientRect(), r = last.getBoundingClientRect();
+    const seen = Math.min(r.bottom, b.bottom, l.bottom) - Math.max(r.top, b.top, l.top);
+    if (seen >= Math.min(16, r.height) || l.top >= b.top) return;
+    box.scrollTop -= b.top - l.top;
   }
   function opt(label, act) { return '<button type="button" data-act="' + act + '">' + esc(label) + '</button>'; }
   // The withdrawal slip 小姨 writes on while you tell her what goes on it.
